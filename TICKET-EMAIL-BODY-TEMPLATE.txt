@@ -1,0 +1,24 @@
+Hi {EMAIL}, <br />
+
+Welcome to EasyRetail<,br />
+
+New ticket has been created is click here to view <br />
+
+<a href ='opentickets.com'>OpenTickets</a>.<br />
+<br />
+
+Ticket ID: {TICKET_ID}<br />
+
+Module Type : {MODULE}<br />
+
+Priority: {PRIORITY}<br />
+
+Status: {STATUS}<br />
+
+Subject: {SUBJECT}<br />
+
+<br/>
+
+
+Thanks & Regards, <br />
+Sudheer Gundubogula <br />

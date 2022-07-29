@@ -1,0 +1,64 @@
+#Application Ports
+server:
+ port: 9050
+ 
+#Service Registry Properties
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
+#Application Ports  
+spring:
+ application:
+    name: ticket-management-service
+ datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/ticket-management
+    username: postgres
+    password: Otsi@123
+ jpa:
+   hibernate:
+    ddl-auto: update
+   database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+   show-sql: true
+   
+#File Properties   
+ servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 1KB
+      max-file-size: 5MB
+   
+#Mail Properties   
+ mail:
+    host: smtp.gmail.com
+    password: raywuntvtunfcthq
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          connectiontimeout: 5000
+          starttls:
+            enable: true
+          timeout: 5000
+          writetimeout: 5000
+    username: abc@gmail.com
+    
+#Logging Properties
+logging:
+    file:
+      name: C:/Users/ADMIN/Desktop/logs/ticket-management.log
+    level:
+      com.otsi.retail.ticketservice.service: DEBUG  
+      
+#Application Constants    
+ticket-app:
+  messages:
+    ticketMailBodyTemplateFile: TICKET-EMAIL-BODY-TEMPLATE.txt
+    ticketMailSubject: New Ticket has been created
+    filesUploadDirectory: D:\\UploadedFiles
