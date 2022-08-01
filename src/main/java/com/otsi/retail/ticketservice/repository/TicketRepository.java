@@ -12,6 +12,6 @@ public interface TicketRepository extends JpaRepository<TicketEntity, Serializab
 
 	List<TicketEntity> findAllByStatus(TicketStatus status);
 
-	//List<TicketEntity> findByStatusIn(TicketStatus status);
+	List<TicketEntity> findByStatus(TicketStatus open);
 
 }

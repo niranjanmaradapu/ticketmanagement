@@ -1,6 +1,6 @@
 Hi {EMAIL}, <br />
 
-Welcome to EasyRetail<,br />
+<h1>Welcome to EasyRetail<h1><br />
 
 New ticket has been created is click here to view <br />
 

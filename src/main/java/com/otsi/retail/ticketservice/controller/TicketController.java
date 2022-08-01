@@ -8,12 +8,14 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.otsi.retail.ticketservice.bindings.ReportsVo;
 import com.otsi.retail.ticketservice.bindings.Ticket;
 import com.otsi.retail.ticketservice.common.TicketStatus;
 import com.otsi.retail.ticketservice.constants.AppConstants;
@@ -59,6 +61,22 @@ public class TicketController {
 		boolean uploadFile = ticketService.uploadFile(file);
 
 		return new GateWayResponse<>(AppConstants.UPLOAD_FILE, uploadFile);
+	}
+	
+	@PutMapping(CommonRequestMappings.UPDATE_TICKET_STATUS)
+	public GateWayResponse<?> updateTicketStatus(@RequestBody Ticket ticket) {
+		log.info("Recieved request to updateTicketStatus():" + ticket);
+		String updateTicketStatus = ticketService.updateTicketStatus(ticket);
+		return new GateWayResponse<>(AppConstants.UPDATE_TICKET_STATUS, updateTicketStatus);
+
+	}
+	
+	@GetMapping(CommonRequestMappings.TICKETS_COUNT)
+	public GateWayResponse<?> getTicketsCount() {
+		log.info("Recieved request to getTicketCount():");
+		List<ReportsVo> tickets = ticketService.getTicketsCount();
+		return new GateWayResponse<>(AppConstants.GET_TICKETS, tickets);
+
 	}
 
 }

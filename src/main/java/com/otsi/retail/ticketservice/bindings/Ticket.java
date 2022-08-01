@@ -34,9 +34,6 @@ public class Ticket {
 	private TicketStatus status;
 	private String assignee;
 	private String closedBy;
-	private Long totalTickets;
-	private Long openTickets;
-	private Long closedTickets;
 	private Long clientId;
 	private Long storeId;
 

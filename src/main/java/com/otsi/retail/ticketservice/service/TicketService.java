@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.otsi.retail.ticketservice.bindings.ReportsVo;
 import com.otsi.retail.ticketservice.bindings.Ticket;
 import com.otsi.retail.ticketservice.common.TicketStatus;
 
@@ -23,5 +24,9 @@ public interface TicketService {
 	List<Ticket> getTicketsByStatus(TicketStatus status);
 
 	boolean uploadFile(MultipartFile file);
+	
+	String updateTicketStatus(Ticket ticket);
+	
+	List<ReportsVo> getTicketsCount();
 
 }

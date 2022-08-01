@@ -8,6 +8,8 @@ public class AppConstants {
 	
 	public static final String UPLOAD_FILE = "File Uploaded Successfully";
 	
+	public static final String UPDATE_TICKET_STATUS = "Ticket Status Updated Successfully ";
+	
 	public static final String TICKET_ID = "{TICKET_ID}";
 	
 	public static final String MODULE = "{MODULE}";

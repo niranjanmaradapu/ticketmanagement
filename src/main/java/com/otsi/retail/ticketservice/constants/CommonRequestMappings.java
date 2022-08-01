@@ -17,6 +17,11 @@ public class CommonRequestMappings {
 
 	public static final String GET_TICKETS_BY_STATUS = "getTicketsByStatus";
 	
+	public static final String UPDATE_TICKET_STATUS = "updateTicketStatus";
+	
+	public static final String TICKETS_COUNT = "getTicketsCount";
+	
+	
 	/************************ Files ************************/
 	public static final String UPLOAD_FILE = "uploadFile";
 }

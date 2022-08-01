@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Stream;
 
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.otsi.retail.ticketservice.bindings.ReportsVo;
 import com.otsi.retail.ticketservice.bindings.Ticket;
 import com.otsi.retail.ticketservice.common.TicketStatus;
 import com.otsi.retail.ticketservice.constants.AppConstants;
@@ -213,6 +215,60 @@ public class TicketServiceImpl implements TicketService {
 
 		return uploadedFile;
 
+	}
+
+	@Override
+	public String updateTicketStatus(Ticket ticket) {
+		log.debug("debuggging updateTicketStatus():" + ticket);
+		Optional<TicketEntity> ticketById = ticketRepository.findById(ticket.getId());
+		TicketEntity update = null;
+
+		if (ticketById.isPresent()) {
+
+			TicketEntity ticketEntity = ticketById.get();
+			ticketEntity.setStatus(ticket.getStatus());
+			update = ticketRepository.save(ticketEntity);
+			log.warn("we are checking ticket status updated..");
+			log.info("Ticket Status Successfully!!");
+
+		} else {
+            
+			log.error("Records not found");
+			throw new RecordNotFoundException("Records not found");
+		}
+
+		return AppConstants.UPDATE_TICKET_STATUS + update.getStatus();
+	}
+
+	@Override
+	public List<ReportsVo> getTicketsCount() {
+		log.debug("debuggging getTicketsCount():");
+		List<ReportsVo> ticketsList = new ArrayList<>();
+
+		List<TicketEntity> openTickets = ticketRepository.findByStatus(TicketStatus.OPEN);
+		long count = openTickets.stream().mapToLong(t -> t.getId()).count();
+		ReportsVo rvo1 = new ReportsVo();
+		rvo1.setName("Open Tickets");
+		rvo1.setOpenTickets(count);
+		ticketsList.add(rvo1);
+
+		List<TicketEntity> closedTickets = ticketRepository.findByStatus(TicketStatus.CLOSED);
+		long count2 = closedTickets.stream().mapToLong(t -> t.getId()).count();
+		ReportsVo rvo2 = new ReportsVo();
+		rvo2.setName("Closed Tickets");
+		rvo2.setClosedTickets(count2);
+		ticketsList.add(rvo2);
+
+		List<TicketEntity> totalTickets = ticketRepository.findAll();
+		long count3 = totalTickets.stream().mapToLong(t -> t.getId()).count();
+		ReportsVo rvo3 = new ReportsVo();
+		rvo3.setName("Total Tickets");
+		rvo3.setTotalTickets(count3);
+		ticketsList.add(rvo3);
+		
+		log.warn("we are checking ticket are getting..");
+		log.info("Tickets Getting Successfully!!");
+		return ticketsList;
 	}
 
 }
