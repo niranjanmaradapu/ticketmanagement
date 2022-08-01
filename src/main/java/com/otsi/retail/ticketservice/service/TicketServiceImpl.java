@@ -232,7 +232,7 @@ public class TicketServiceImpl implements TicketService {
 			log.info("Ticket Status Successfully!!");
 
 		} else {
-            
+
 			log.error("Records not found");
 			throw new RecordNotFoundException("Records not found");
 		}
@@ -265,10 +265,26 @@ public class TicketServiceImpl implements TicketService {
 		rvo3.setName("Total Tickets");
 		rvo3.setTotalTickets(count3);
 		ticketsList.add(rvo3);
-		
+
 		log.warn("we are checking ticket are getting..");
 		log.info("Tickets Getting Successfully!!");
 		return ticketsList;
+	}
+
+	@Override
+	public List<Ticket> ticketsSearching(Ticket ticket) {
+		log.debug("debuggging ticketsSearching():");
+		List<TicketEntity> ticketsList = new ArrayList<>();
+		if (ticket.getTicketId() != null && ticket.getStatus() != null) {
+			ticketsList = ticketRepository.findByStatusAndTicketId(ticket.getStatus(), ticket.getTicketId());
+		}
+		if (CollectionUtils.isEmpty(ticketsList)) {
+			throw new RecordNotFoundException("Records not found");
+		}
+		List<Ticket> result = ticketMapper.convertTicketEntityToVo(ticketsList);
+		log.warn("we are checking ticket are getting..");
+		log.info("Tickets Getting Successfully!!");
+		return result;
 	}
 
 }

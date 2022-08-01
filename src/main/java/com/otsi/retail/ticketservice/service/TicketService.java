@@ -28,5 +28,7 @@ public interface TicketService {
 	String updateTicketStatus(Ticket ticket);
 	
 	List<ReportsVo> getTicketsCount();
+	
+	List<Ticket> ticketsSearching(Ticket ticket);
 
 }

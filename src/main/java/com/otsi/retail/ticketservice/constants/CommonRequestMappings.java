@@ -21,6 +21,8 @@ public class CommonRequestMappings {
 	
 	public static final String TICKETS_COUNT = "getTicketsCount";
 	
+	public static final String TICKETS_SEARCHING ="searchTickets";
+	
 	
 	/************************ Files ************************/
 	public static final String UPLOAD_FILE = "uploadFile";
