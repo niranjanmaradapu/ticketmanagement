@@ -3,10 +3,7 @@
  */
 package com.otsi.retail.ticketservice.bindings;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-
-import com.otsi.retail.ticketservice.common.WorkQuality;
+import com.otsi.retail.ticketservice.common.FeedBack;
 
 import lombok.Data;
 
@@ -18,9 +15,9 @@ import lombok.Data;
 public class FeedBackVo {
 
 	private Long id;
-	private WorkQuality workQuality;
-	private WorkQuality responseTime;
-	private WorkQuality issueResolutionTime;
-	private WorkQuality overallRating;
+	private FeedBack workQuality;
+	private FeedBack responseTime;
+	private FeedBack issueResolutionTime;
+	private FeedBack overallRating;
 
 }

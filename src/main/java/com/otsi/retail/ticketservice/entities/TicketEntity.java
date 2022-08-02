@@ -3,14 +3,18 @@
  */
 package com.otsi.retail.ticketservice.entities;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -58,5 +62,8 @@ public class TicketEntity extends BaseEntity {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "feedBack_id")
 	private FeedBackEntity feedBackEntity;
+	
+	@OneToMany(mappedBy = "ticketEntity",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private List<CommentEntity> comments;
 
 }

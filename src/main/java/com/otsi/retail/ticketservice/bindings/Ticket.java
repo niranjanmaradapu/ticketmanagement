@@ -3,9 +3,12 @@
  */
 package com.otsi.retail.ticketservice.bindings;
 
+import java.util.List;
+
 import com.otsi.retail.ticketservice.common.IssueType;
 import com.otsi.retail.ticketservice.common.Priority;
 import com.otsi.retail.ticketservice.common.TicketStatus;
+import com.otsi.retail.ticketservice.entities.CommentEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,5 +41,6 @@ public class Ticket {
 	private Long storeId;
 
 	private FeedBackVo feedBackVo;
+	private List<CommentVo> commentsVo;
 
 }

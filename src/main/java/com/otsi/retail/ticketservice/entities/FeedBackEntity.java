@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.otsi.retail.ticketservice.common.WorkQuality;
+import com.otsi.retail.ticketservice.common.FeedBack;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,13 +37,13 @@ public class FeedBackEntity extends BaseEntity {
 	private Long id;
 
 	@Enumerated(EnumType.STRING)
-	private WorkQuality workQuality;
+	private FeedBack workQuality;
 	@Enumerated(EnumType.STRING)
-	private WorkQuality responseTime;
+	private FeedBack responseTime;
 	@Enumerated(EnumType.STRING)
-	private WorkQuality issueResolutionTime;
+	private FeedBack issueResolutionTime;
 	@Enumerated(EnumType.STRING)
-	private WorkQuality overallRating;
+	private FeedBack overallRating;
 	
 	@OneToOne(mappedBy = "feedBackEntity", cascade = CascadeType.ALL)
 	private TicketEntity ticketEntity;

@@ -3,11 +3,15 @@
  */
 package com.otsi.retail.ticketservice.mapper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
+
+import com.otsi.retail.ticketservice.bindings.CommentVo;
 import com.otsi.retail.ticketservice.bindings.Ticket;
+import com.otsi.retail.ticketservice.entities.CommentEntity;
 import com.otsi.retail.ticketservice.entities.FeedBackEntity;
 import com.otsi.retail.ticketservice.entities.TicketEntity;
 
@@ -35,15 +39,32 @@ public class TicketMapper {
 		ticketEntity.setAssignee(ticket.getAssignee());
 		ticketEntity.setClientId(ticket.getClientId());
 		ticketEntity.setStoreId(ticket.getStoreId());
-		
+
+		// Feed Back properties
 		FeedBackEntity feedBackEntity = new FeedBackEntity();
 		feedBackEntity.setId(ticket.getFeedBackVo().getId());
 		feedBackEntity.setWorkQuality(ticket.getFeedBackVo().getWorkQuality());
-		feedBackEntity.setResponseTime(ticket.getFeedBackVo().getResponseTime());;
+		feedBackEntity.setResponseTime(ticket.getFeedBackVo().getResponseTime());
+		;
 		feedBackEntity.setIssueResolutionTime(ticket.getFeedBackVo().getIssueResolutionTime());
 		feedBackEntity.setOverallRating(ticket.getFeedBackVo().getOverallRating());
-		//setting feedback entity to ticket entity
+		// setting feedback entity to ticket entity
 		ticketEntity.setFeedBackEntity(feedBackEntity);
+
+		// Comments properties
+		List<CommentEntity> commentsList = new ArrayList<>();
+		List<CommentVo> comments = ticket.getCommentsVo();
+		comments.stream().forEach(c -> {
+
+			CommentEntity commentEntity = new CommentEntity();
+			commentEntity.setId(c.getId());
+			commentEntity.setComment(c.getComment());
+			//setting ticket entity to comments
+			commentEntity.setTicketEntity(ticketEntity);
+			commentsList.add(commentEntity);
+		});
+		//setting comments to ticket entity
+		ticketEntity.setComments(commentsList);
 
 		return ticketEntity;
 

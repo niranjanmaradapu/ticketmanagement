@@ -33,7 +33,7 @@ public class BaseEntity {
     @LastModifiedBy
     private Long modifiedBy;
 
-    @Column(name = "closed_date")
+    @Column(name = "last_modified_date")
     @LastModifiedDate
     private LocalDateTime lastModifiedDate = LocalDateTime.now();
 
