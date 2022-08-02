@@ -22,7 +22,7 @@ public class EmailUtils {
 			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
 			mimeMessageHelper.setSubject(subject);
 			mimeMessageHelper.setTo(to);
-			mimeMessageHelper.setText(body);
+			mimeMessageHelper.setText("text/html",body);
 			mailSender.send(mimeMessageHelper.getMimeMessage());
 			isMailSent = true;
 		} catch (Exception e) {

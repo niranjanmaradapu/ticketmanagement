@@ -30,5 +30,7 @@ public interface TicketService {
 	List<ReportsVo> getTicketsCount();
 	
 	List<Ticket> ticketsSearching(Ticket ticket);
+	
+	
 
 }

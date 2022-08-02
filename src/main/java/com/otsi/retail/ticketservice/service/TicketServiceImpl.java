@@ -114,14 +114,14 @@ public class TicketServiceImpl implements TicketService {
 
 	/**
 	 * This is a private method
-	 * 
 	 * @ReadMailBody to read mail body file API
 	 */
-	private String readMailBody(String fileName, Ticket ticket) {
+	private String readMailBody(String fileName, Ticket ticket){
 
 		log.debug("debuggging readMailBody():" + fileName + " " + ticket);
 		String mailBody = null;
 		StringBuffer buffer = new StringBuffer();
+		
 		Path path = Paths.get(fileName);
 		try (Stream<String> stream = Files.lines(path)) {
 			stream.forEach(line -> {

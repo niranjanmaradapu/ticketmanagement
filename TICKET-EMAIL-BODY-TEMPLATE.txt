@@ -1,24 +1,23 @@
-Hi {EMAIL}, <br />
-
-<h1>Welcome to EasyRetail<h1><br />
-
-New ticket has been created is click here to view <br />
-
-<a href ='opentickets.com'>OpenTickets</a>.<br />
-<br />
-
-Ticket ID: {TICKET_ID}<br />
-
-Module Type : {MODULE}<br />
-
-Priority: {PRIORITY}<br />
-
-Status: {STATUS}<br />
-
-Subject: {SUBJECT}<br />
-
+<html>
+Hi {EMAIL},<br/>
 <br/>
+<strong>Welcome to EasyRetail !!</strong><br/>
+<br/>
+New ticket has been generated click here to view<a href="https://www.openTickets.com">(OpenTickets)</a> <br/>
+<br/>
+Ticket ID: {TICKET_ID}<br/>
+<br/>
+Module Type : {MODULE}<br/>
+<br/>
+Priority: {PRIORITY}<br/>
+<br/>
+Status: {STATUS}<br/>
+<br/>
+Subject: {SUBJECT}<br/>
+<br/>
+Thanks & Regards,<br/>
+Sudheer Gundubogula<br/>
+
+</html>
 
 
-Thanks & Regards, <br />
-Sudheer Gundubogula <br />

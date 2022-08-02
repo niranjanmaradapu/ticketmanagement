@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 import com.otsi.retail.ticketservice.bindings.Ticket;
+import com.otsi.retail.ticketservice.entities.FeedBackEntity;
 import com.otsi.retail.ticketservice.entities.TicketEntity;
 
 /**
@@ -34,6 +35,15 @@ public class TicketMapper {
 		ticketEntity.setAssignee(ticket.getAssignee());
 		ticketEntity.setClientId(ticket.getClientId());
 		ticketEntity.setStoreId(ticket.getStoreId());
+		
+		FeedBackEntity feedBackEntity = new FeedBackEntity();
+		feedBackEntity.setId(ticket.getFeedBackVo().getId());
+		feedBackEntity.setWorkQuality(ticket.getFeedBackVo().getWorkQuality());
+		feedBackEntity.setResponseTime(ticket.getFeedBackVo().getResponseTime());;
+		feedBackEntity.setIssueResolutionTime(ticket.getFeedBackVo().getIssueResolutionTime());
+		feedBackEntity.setOverallRating(ticket.getFeedBackVo().getOverallRating());
+		//setting feedback entity to ticket entity
+		ticketEntity.setFeedBackEntity(feedBackEntity);
 
 		return ticketEntity;
 

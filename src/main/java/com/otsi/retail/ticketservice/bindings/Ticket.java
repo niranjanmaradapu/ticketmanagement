@@ -21,7 +21,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class Ticket {
-	
+
 	private Long id;
 	private String ticketId;
 	private IssueType issueType;
@@ -36,5 +36,7 @@ public class Ticket {
 	private String closedBy;
 	private Long clientId;
 	private Long storeId;
+
+	private FeedBackVo feedBackVo;
 
 }

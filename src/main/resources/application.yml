@@ -16,6 +16,9 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher
     
 #File Properties   
   servlet:
