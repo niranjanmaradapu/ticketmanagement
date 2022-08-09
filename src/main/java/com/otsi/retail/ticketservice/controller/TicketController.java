@@ -79,6 +79,14 @@ public class TicketController {
 
 	}
 	
+	@GetMapping(CommonRequestMappings.TICKETS_COUNT)
+	public GateWayResponse<?> getTicketsCount() {
+		log.info("Recieved request to getTicketsCount():");
+		List<ReportsVo> ticketsCount = ticketService.getTicketsCount();
+		return new GateWayResponse<>(AppConstants.GET_TICKETS, ticketsCount);
+
+	}
+	
 	
 
 }
