@@ -31,14 +31,11 @@ import com.otsi.retail.ticketservice.service.TicketService;
 @RequestMapping(CommonRequestMappings.TICKET)
 public class TicketController {
 
-	private Logger log = LogManager.getLogger(TicketController.class);
-
 	@Autowired
 	private TicketService ticketService;
 
 	@PostMapping(CommonRequestMappings.SAVE_TICKET)
 	public GateWayResponse<?> saveNewTicket(@RequestBody Ticket ticket) {
-		log.info("Recieved request to saveNewTicket():" + ticket);
 		boolean saveTicket = ticketService.saveTicket(ticket);
 		return new GateWayResponse<>(AppConstants.SAVE_TICKET, saveTicket);
 
@@ -47,7 +44,6 @@ public class TicketController {
 	@GetMapping(CommonRequestMappings.GET_TICKETS_BY_STATUS)
 	public GateWayResponse<?> getTickets(@RequestParam("status") TicketStatus status) {
 
-		log.info("Recieved request to getTicketsByStatus():");
 		List<Ticket> tickets = ticketService.getTicketsByStatus(status);
 
 		return new GateWayResponse<>(AppConstants.GET_TICKETS, tickets);
@@ -57,7 +53,6 @@ public class TicketController {
 	@PostMapping(CommonRequestMappings.UPLOAD_FILE)
 	public GateWayResponse<?> uploadFile(@RequestParam("file") MultipartFile file) {
 
-		log.info("Recieved request to uploadFile():");
 		boolean uploadFile = ticketService.uploadFile(file);
 
 		return new GateWayResponse<>(AppConstants.UPLOAD_FILE, uploadFile);
@@ -65,7 +60,6 @@ public class TicketController {
 	
 	@PutMapping(CommonRequestMappings.UPDATE_TICKET_STATUS)
 	public GateWayResponse<?> updateTicketStatus(@RequestBody Ticket ticket) {
-		log.info("Recieved request to updateTicketStatus():" + ticket);
 		String updateTicketStatus = ticketService.updateTicketStatus(ticket);
 		return new GateWayResponse<>(AppConstants.UPDATE_TICKET_STATUS, updateTicketStatus);
 
@@ -73,7 +67,6 @@ public class TicketController {
 	
 	@PostMapping(CommonRequestMappings.TICKETS_SEARCHING)
 	public GateWayResponse<?> searchTickets(@RequestBody Ticket ticket) {
-		log.info("Recieved request to searchTickets():");
 		List<Ticket> tickets = ticketService.ticketsSearching(ticket);
 		return new GateWayResponse<>(AppConstants.GET_TICKETS, tickets);
 
@@ -81,7 +74,6 @@ public class TicketController {
 	
 	@GetMapping(CommonRequestMappings.TICKETS_COUNT)
 	public GateWayResponse<?> getTicketsCount() {
-		log.info("Recieved request to getTicketsCount():");
 		List<ReportsVo> ticketsCount = ticketService.getTicketsCount();
 		return new GateWayResponse<>(AppConstants.GET_TICKETS, ticketsCount);
 

@@ -31,6 +31,4 @@ public interface TicketService {
 	
 	List<Ticket> ticketsSearching(Ticket ticket);
 	
-	
-
 }

@@ -43,8 +43,6 @@ import com.otsi.retail.ticketservice.utils.FileUploadUtils;
 @Service
 public class TicketServiceImpl implements TicketService {
 
-	private Logger log = LogManager.getLogger(TicketServiceImpl.class);
-
 	@Autowired
 	private TicketRepository ticketRepository;
 
@@ -66,7 +64,6 @@ public class TicketServiceImpl implements TicketService {
 	@Override
 	public boolean saveTicket(Ticket ticket) {
 
-		log.debug("debuggging saveTicket():" + ticket);
 		ticket.setTicketId(
 				"TK" + LocalDate.now().getYear() + LocalDate.now().getDayOfMonth() + LocalDate.now() + getSaltString());
 		ticket.setStatus(TicketStatus.OPEN);
@@ -74,8 +71,6 @@ public class TicketServiceImpl implements TicketService {
 		TicketEntity ticketEntity = ticketMapper.convertVoToEntity(ticket);
 
 		TicketEntity save = ticketRepository.save(ticketEntity);
-		log.warn("we are checking if ticket is saved..");
-		log.info("Ticket Saved Successfully!!");
 
 		if (null != save.getTicketId()) {
 			return sendEmail(ticket);
@@ -92,7 +87,6 @@ public class TicketServiceImpl implements TicketService {
 	 */
 	private boolean sendEmail(Ticket ticket) {
 
-		log.debug("debuggging sendEmail():" + ticket);
 		boolean isMailSent = false;
 		try {
 			Map<String, String> messages = appProps.getMessages();
@@ -103,11 +97,9 @@ public class TicketServiceImpl implements TicketService {
 			isMailSent = true;
 
 		} catch (Exception e) {
-			log.error("REGAPP101 Error");
 			throw new RegAppException(e.getMessage());
 		}
-		log.warn("we are checking if mail is send..");
-		log.info("Mail Sent Successfully!!");
+
 		return isMailSent;
 
 	}
@@ -118,7 +110,6 @@ public class TicketServiceImpl implements TicketService {
 	 */
 	private String readMailBody(String fileName, Ticket ticket){
 
-		log.debug("debuggging readMailBody():" + fileName + " " + ticket);
 		String mailBody = null;
 		StringBuffer buffer = new StringBuffer();
 		
@@ -138,8 +129,6 @@ public class TicketServiceImpl implements TicketService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		log.warn("we are checking if mail body is reading..");
-		log.info("Mail Body Readed Successfully!!");
 		return mailBody;
 	}
 
@@ -150,7 +139,6 @@ public class TicketServiceImpl implements TicketService {
 	@Override
 	public List<Ticket> getTicketsByStatus(TicketStatus status) {
 
-		log.debug("debuggging getTicketsByStatus():" + status);
 		List<TicketEntity> ticketEntity = new ArrayList<>();
 
 		if (status.equals(TicketStatus.ALL)) {
@@ -159,13 +147,10 @@ public class TicketServiceImpl implements TicketService {
 
 			ticketEntity = ticketRepository.findAllByStatus(status);
 			if (CollectionUtils.isEmpty(ticketEntity)) {
-				log.error("records not found");
 				throw new RecordNotFoundException("Records not found");
 			}
 		}
 		List<Ticket> ticketsList = ticketMapper.convertTicketEntityToVo(ticketEntity);
-		log.warn("we are checking tickets are fetching..");
-		log.info("fetching list of tickets");
 		return ticketsList;
 
 	}
@@ -188,27 +173,21 @@ public class TicketServiceImpl implements TicketService {
 
 	@Override
 	public boolean uploadFile(MultipartFile file) {
-		log.debug("debuggging uploadFile():" + file);
 		boolean uploadedFile = false;
 		try {
 			if (file.isEmpty()) {
-				log.error("Request must be a file");
 				throw new InvalidDataException("Request must be a file");
 			}
 
 			if (!((file.getContentType().equals("image/jpeg")) || (file.getContentType().equals("image/png")))) {
-				log.error("Only JPEG and PNG content are allowed");
 				throw new InvalidDataException("Only JPEG and PNG content are allowed");
 			}
 
 			uploadedFile = fileUploadUtils.uploadFile(file);
-			log.warn("we are checking files are uploading..");
-			log.info("Files Uploaded Successfully!!");
 			if (!uploadedFile) {
 				throw new InvalidDataException("File uploading failed");
 			}
 		} catch (Exception e) {
-			log.error("Invalid Request");
 			throw new InvalidDataException("Invalid Request");
 
 		}
@@ -219,7 +198,6 @@ public class TicketServiceImpl implements TicketService {
 
 	@Override
 	public String updateTicketStatus(Ticket ticket) {
-		log.debug("debuggging updateTicketStatus():" + ticket);
 		Optional<TicketEntity> ticketById = ticketRepository.findById(ticket.getId());
 		TicketEntity update = null;
 
@@ -228,12 +206,8 @@ public class TicketServiceImpl implements TicketService {
 			TicketEntity ticketEntity = ticketById.get();
 			ticketEntity.setStatus(ticket.getStatus());
 			update = ticketRepository.save(ticketEntity);
-			log.warn("we are checking ticket status updated..");
-			log.info("Ticket Status Successfully!!");
 
 		} else {
-
-			log.error("Records not found");
 			throw new RecordNotFoundException("Records not found");
 		}
 
@@ -242,7 +216,6 @@ public class TicketServiceImpl implements TicketService {
 
 	@Override
 	public List<ReportsVo> getTicketsCount() {
-		log.debug("debuggging getTicketsCount():");
 		List<ReportsVo> ticketsList = new ArrayList<>();
 
 		List<TicketEntity> openTickets = ticketRepository.findByStatus(TicketStatus.OPEN);
@@ -266,14 +239,11 @@ public class TicketServiceImpl implements TicketService {
 		rvo3.setTotalTickets(count3);
 		ticketsList.add(rvo3);
 
-		log.warn("we are checking ticket are getting..");
-		log.info("Tickets Getting Successfully!!");
 		return ticketsList;
 	}
 
 	@Override
 	public List<Ticket> ticketsSearching(Ticket ticket) {
-		log.debug("debuggging ticketsSearching():");
 		List<TicketEntity> ticketsList = new ArrayList<>();
 		if (ticket.getTicketId() != null && ticket.getStatus() != null) {
 			ticketsList = ticketRepository.findByStatusAndTicketId(ticket.getStatus(), ticket.getTicketId());
@@ -282,8 +252,6 @@ public class TicketServiceImpl implements TicketService {
 			throw new RecordNotFoundException("Records not found");
 		}
 		List<Ticket> result = ticketMapper.convertTicketEntityToVo(ticketsList);
-		log.warn("we are checking ticket are getting..");
-		log.info("Tickets Getting Successfully!!");
 		return result;
 	}
 
