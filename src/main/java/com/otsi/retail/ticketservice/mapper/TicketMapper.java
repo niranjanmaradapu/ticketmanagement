@@ -40,17 +40,6 @@ public class TicketMapper {
 		ticketEntity.setClientId(ticket.getClientId());
 		ticketEntity.setStoreId(ticket.getStoreId());
 
-		// Feed Back properties
-		FeedBackEntity feedBackEntity = new FeedBackEntity();
-		feedBackEntity.setId(ticket.getFeedBackVo().getId());
-		feedBackEntity.setWorkQuality(ticket.getFeedBackVo().getWorkQuality());
-		feedBackEntity.setResponseTime(ticket.getFeedBackVo().getResponseTime());
-		;
-		feedBackEntity.setIssueResolutionTime(ticket.getFeedBackVo().getIssueResolutionTime());
-		feedBackEntity.setOverallRating(ticket.getFeedBackVo().getOverallRating());
-		// setting feedback entity to ticket entity
-		ticketEntity.setFeedBackEntity(feedBackEntity);
-
 		// Comments properties
 		List<CommentEntity> commentsList = new ArrayList<>();
 		List<CommentVo> comments = ticket.getCommentsVo();
@@ -59,11 +48,11 @@ public class TicketMapper {
 			CommentEntity commentEntity = new CommentEntity();
 			commentEntity.setId(c.getId());
 			commentEntity.setComment(c.getComment());
-			//setting ticket entity to comments
+			// set ticket entity to comments
 			commentEntity.setTicketEntity(ticketEntity);
 			commentsList.add(commentEntity);
 		});
-		//setting comments to ticket entity
+		// set comments to ticket
 		ticketEntity.setComments(commentsList);
 
 		return ticketEntity;

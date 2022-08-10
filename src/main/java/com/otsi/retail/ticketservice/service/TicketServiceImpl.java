@@ -26,12 +26,14 @@ import com.otsi.retail.ticketservice.bindings.ReportsVo;
 import com.otsi.retail.ticketservice.bindings.Ticket;
 import com.otsi.retail.ticketservice.common.TicketStatus;
 import com.otsi.retail.ticketservice.constants.AppConstants;
+import com.otsi.retail.ticketservice.entities.FeedBackEntity;
 import com.otsi.retail.ticketservice.entities.TicketEntity;
 import com.otsi.retail.ticketservice.exceptions.InvalidDataException;
 import com.otsi.retail.ticketservice.exceptions.RecordNotFoundException;
 import com.otsi.retail.ticketservice.exceptions.RegAppException;
 import com.otsi.retail.ticketservice.mapper.TicketMapper;
 import com.otsi.retail.ticketservice.props.AppProperties;
+import com.otsi.retail.ticketservice.repository.FeedBackRepository;
 import com.otsi.retail.ticketservice.repository.TicketRepository;
 import com.otsi.retail.ticketservice.utils.EmailUtils;
 import com.otsi.retail.ticketservice.utils.FileUploadUtils;
@@ -58,22 +60,40 @@ public class TicketServiceImpl implements TicketService {
 	@Autowired
 	private FileUploadUtils fileUploadUtils;
 
+	@Autowired
+	private FeedBackRepository feedBackRepository;
+
 	/**
 	 * @SavTicket ticket creation API
 	 */
 	@Override
 	public boolean saveTicket(Ticket ticket) {
 
-		ticket.setTicketId(
-				"TK" + LocalDate.now().getYear() + LocalDate.now().getDayOfMonth() + LocalDate.now() + getSaltString());
-		ticket.setStatus(TicketStatus.OPEN);
+		if (ticket.getTicketId() == null) {
+			ticket.setTicketId("TK" + LocalDate.now().getYear() + LocalDate.now().getDayOfMonth() + LocalDate.now()
+					+ getSaltString());
+			ticket.setStatus(TicketStatus.OPEN);
 
-		TicketEntity ticketEntity = ticketMapper.convertVoToEntity(ticket);
+			TicketEntity ticketEntity = ticketMapper.convertVoToEntity(ticket);
 
-		TicketEntity save = ticketRepository.save(ticketEntity);
+			TicketEntity save = ticketRepository.save(ticketEntity);
 
-		if (null != save.getTicketId()) {
-			return sendEmail(ticket);
+			if (null != save.getTicketId()) {
+				return sendEmail(ticket);
+			}
+		} else {
+
+			TicketEntity tickets = ticketRepository.findByTicketId(ticket.getTicketId());
+			FeedBackEntity feedBackEntity = new FeedBackEntity();
+			feedBackEntity.setId(ticket.getFeedBackVo().getId());
+			feedBackEntity.setWorkQuality(ticket.getFeedBackVo().getWorkQuality());
+			feedBackEntity.setResponseTime(ticket.getFeedBackVo().getResponseTime());
+			feedBackEntity.setIssueResolutionTime(ticket.getFeedBackVo().getIssueResolutionTime());
+			feedBackEntity.setOverallRating(ticket.getFeedBackVo().getOverallRating());
+			// set feedback into ticket
+			tickets.setFeedBackEntity(feedBackEntity);
+			feedBackRepository.save(feedBackEntity);
+
 		}
 
 		return false;
@@ -106,13 +126,14 @@ public class TicketServiceImpl implements TicketService {
 
 	/**
 	 * This is a private method
+	 * 
 	 * @ReadMailBody to read mail body file API
 	 */
-	private String readMailBody(String fileName, Ticket ticket){
+	private String readMailBody(String fileName, Ticket ticket) {
 
 		String mailBody = null;
 		StringBuffer buffer = new StringBuffer();
-		
+
 		Path path = Paths.get(fileName);
 		try (Stream<String> stream = Files.lines(path)) {
 			stream.forEach(line -> {

@@ -16,4 +16,6 @@ public interface TicketRepository extends JpaRepository<TicketEntity, Serializab
 
 	List<TicketEntity> findByStatusAndTicketId(TicketStatus status, String ticketId);
 
+	TicketEntity findByTicketId(String ticketId);
+
 }
