@@ -72,10 +72,6 @@ public class TicketServiceImpl implements TicketService {
 	@Override
 	public boolean saveTicket(Ticket ticket) {
 
-		TicketEntity ticketEntity = ticketRepository.findByTicketId(ticket.getTicketId());
-		if (ticketEntity == null)
-			throw new RecordNotFoundException("Record not found");
-
 		if (ticket.getTicketId() == null) {
 			ticket.setTicketId("TK" + LocalDate.now().getYear() + LocalDate.now().getDayOfMonth() + LocalDate.now()
 					+ getSaltString());
@@ -90,6 +86,9 @@ public class TicketServiceImpl implements TicketService {
 			}
 		} else if (ticket.getTicketId() != null && ticket.getFeedBackVo() != null) {
 
+			TicketEntity ticketEntity = ticketRepository.findByTicketId(ticket.getTicketId());
+			if (ticketEntity == null)
+				throw new RecordNotFoundException("Record not found");
 			FeedBackEntity feedBackEntity = new FeedBackEntity();
 			feedBackEntity.setId(ticket.getFeedBackVo().getId());
 			feedBackEntity.setWorkQuality(ticket.getFeedBackVo().getWorkQuality());
@@ -101,8 +100,11 @@ public class TicketServiceImpl implements TicketService {
 			feedBackRepository.save(feedBackEntity);
 
 		} else if (ticket.getTicketId() != null && !(CollectionUtils.isEmpty(ticket.getCommentsVo()))) {
-			List<CommentEntity> commentList = new ArrayList<>();
 
+			TicketEntity ticketEntity = ticketRepository.findByTicketId(ticket.getTicketId());
+			if (ticketEntity == null)
+				throw new RecordNotFoundException("Record not found");
+			List<CommentEntity> commentList = new ArrayList<>();
 			ticket.getCommentsVo().stream().forEach(c -> {
 
 				CommentEntity commentEntity = new CommentEntity();
@@ -116,7 +118,6 @@ public class TicketServiceImpl implements TicketService {
 			// set comments into ticket
 			ticketEntity.setComments(commentList);
 		}
-
 
 		return false;
 
