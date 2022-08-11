@@ -15,8 +15,6 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Stream;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -26,6 +24,7 @@ import com.otsi.retail.ticketservice.bindings.ReportsVo;
 import com.otsi.retail.ticketservice.bindings.Ticket;
 import com.otsi.retail.ticketservice.common.TicketStatus;
 import com.otsi.retail.ticketservice.constants.AppConstants;
+import com.otsi.retail.ticketservice.entities.CommentEntity;
 import com.otsi.retail.ticketservice.entities.FeedBackEntity;
 import com.otsi.retail.ticketservice.entities.TicketEntity;
 import com.otsi.retail.ticketservice.exceptions.InvalidDataException;
@@ -33,6 +32,7 @@ import com.otsi.retail.ticketservice.exceptions.RecordNotFoundException;
 import com.otsi.retail.ticketservice.exceptions.RegAppException;
 import com.otsi.retail.ticketservice.mapper.TicketMapper;
 import com.otsi.retail.ticketservice.props.AppProperties;
+import com.otsi.retail.ticketservice.repository.CommentRepository;
 import com.otsi.retail.ticketservice.repository.FeedBackRepository;
 import com.otsi.retail.ticketservice.repository.TicketRepository;
 import com.otsi.retail.ticketservice.utils.EmailUtils;
@@ -63,27 +63,33 @@ public class TicketServiceImpl implements TicketService {
 	@Autowired
 	private FeedBackRepository feedBackRepository;
 
+	@Autowired
+	private CommentRepository commentRepository;
+
 	/**
 	 * @SavTicket ticket creation API
 	 */
 	@Override
 	public boolean saveTicket(Ticket ticket) {
 
+		TicketEntity ticketEntity = ticketRepository.findByTicketId(ticket.getTicketId());
+		if (ticketEntity == null)
+			throw new RecordNotFoundException("Record not found");
+
 		if (ticket.getTicketId() == null) {
 			ticket.setTicketId("TK" + LocalDate.now().getYear() + LocalDate.now().getDayOfMonth() + LocalDate.now()
 					+ getSaltString());
 			ticket.setStatus(TicketStatus.OPEN);
 
-			TicketEntity ticketEntity = ticketMapper.convertVoToEntity(ticket);
+			TicketEntity ticketEnt = ticketMapper.convertVoToEntity(ticket);
 
-			TicketEntity save = ticketRepository.save(ticketEntity);
+			TicketEntity save = ticketRepository.save(ticketEnt);
 
 			if (null != save.getTicketId()) {
 				return sendEmail(ticket);
 			}
-		} else {
+		} else if (ticket.getTicketId() != null && ticket.getFeedBackVo() != null) {
 
-			TicketEntity tickets = ticketRepository.findByTicketId(ticket.getTicketId());
 			FeedBackEntity feedBackEntity = new FeedBackEntity();
 			feedBackEntity.setId(ticket.getFeedBackVo().getId());
 			feedBackEntity.setWorkQuality(ticket.getFeedBackVo().getWorkQuality());
@@ -91,12 +97,29 @@ public class TicketServiceImpl implements TicketService {
 			feedBackEntity.setIssueResolutionTime(ticket.getFeedBackVo().getIssueResolutionTime());
 			feedBackEntity.setOverallRating(ticket.getFeedBackVo().getOverallRating());
 			// set feedback into ticket
-			tickets.setFeedBackEntity(feedBackEntity);
+			ticketEntity.setFeedBackEntity(feedBackEntity);
 			feedBackRepository.save(feedBackEntity);
 
+		} else if (ticket.getTicketId() != null && !(CollectionUtils.isEmpty(ticket.getCommentsVo()))) {
+			List<CommentEntity> commentList = new ArrayList<>();
+
+			ticket.getCommentsVo().stream().forEach(c -> {
+
+				CommentEntity commentEntity = new CommentEntity();
+				commentEntity.setId(c.getId());
+				commentEntity.setComment(c.getComment());
+				// set ticket into comment
+				commentEntity.setTicketEntity(ticketEntity);
+				commentList.add(commentEntity);
+				commentRepository.save(commentEntity);
+			});
+			// set comments into ticket
+			ticketEntity.setComments(commentList);
 		}
 
+
 		return false;
+
 	}
 
 	/**

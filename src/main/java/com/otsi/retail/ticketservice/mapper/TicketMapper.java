@@ -3,16 +3,12 @@
  */
 package com.otsi.retail.ticketservice.mapper;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import com.otsi.retail.ticketservice.bindings.CommentVo;
 import com.otsi.retail.ticketservice.bindings.Ticket;
-import com.otsi.retail.ticketservice.entities.CommentEntity;
-import com.otsi.retail.ticketservice.entities.FeedBackEntity;
 import com.otsi.retail.ticketservice.entities.TicketEntity;
 
 /**
@@ -39,21 +35,6 @@ public class TicketMapper {
 		ticketEntity.setAssignee(ticket.getAssignee());
 		ticketEntity.setClientId(ticket.getClientId());
 		ticketEntity.setStoreId(ticket.getStoreId());
-
-		// Comments properties
-		List<CommentEntity> commentsList = new ArrayList<>();
-		List<CommentVo> comments = ticket.getCommentsVo();
-		comments.stream().forEach(c -> {
-
-			CommentEntity commentEntity = new CommentEntity();
-			commentEntity.setId(c.getId());
-			commentEntity.setComment(c.getComment());
-			// set ticket entity to comments
-			commentEntity.setTicketEntity(ticketEntity);
-			commentsList.add(commentEntity);
-		});
-		// set comments to ticket
-		ticketEntity.setComments(commentsList);
 
 		return ticketEntity;
 
