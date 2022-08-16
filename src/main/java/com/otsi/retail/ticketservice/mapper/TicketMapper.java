@@ -74,16 +74,6 @@ public class TicketMapper {
 			});
 			ticket.setCommentsVo(commentList);
 
-			// getting feedback
-			FeedBackEntity feedBackEntity = t.getFeedBackEntity();
-			FeedBackVo feedBackVo = new FeedBackVo();
-			feedBackVo.setId(feedBackEntity.getId());
-			feedBackVo.setIssueResolutionTime(feedBackEntity.getIssueResolutionTime());
-			feedBackVo.setOverallRating(feedBackEntity.getOverallRating());
-			feedBackVo.setResponseTime(feedBackEntity.getResponseTime());
-			feedBackVo.setWorkQuality(feedBackEntity.getWorkQuality());
-			ticket.setFeedBackVo(feedBackVo);
-
 			ticketList.add(ticket);
 		});
 		return ticketList;
