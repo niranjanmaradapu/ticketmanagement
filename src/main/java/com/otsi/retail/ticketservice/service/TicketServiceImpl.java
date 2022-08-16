@@ -195,7 +195,7 @@ public class TicketServiceImpl implements TicketService {
 				throw new RecordNotFoundException("Records not found");
 			}
 		}
-		List<Ticket> ticketsList = ticketMapper.convertTicketEntityToVo(ticketEntity);
+		List<Ticket> ticketsList = ticketMapper.convertEntityToVo(ticketEntity);
 		return ticketsList;
 
 	}
@@ -288,7 +288,7 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public List<Ticket> ticketsSearching(Ticket ticket) {
+	public List<Ticket> ticketSearching(Ticket ticket) {
 		List<TicketEntity> ticketsList = new ArrayList<>();
 		if (ticket.getTicketId() != null && ticket.getStatus() != null) {
 			ticketsList = ticketRepository.findByStatusAndTicketId(ticket.getStatus(), ticket.getTicketId());
@@ -296,7 +296,7 @@ public class TicketServiceImpl implements TicketService {
 		if (CollectionUtils.isEmpty(ticketsList)) {
 			throw new RecordNotFoundException("Records not found");
 		}
-		List<Ticket> result = ticketMapper.convertTicketEntityToVo(ticketsList);
+		List<Ticket> result = ticketMapper.convertEntityToVo(ticketsList);
 		return result;
 	}
 

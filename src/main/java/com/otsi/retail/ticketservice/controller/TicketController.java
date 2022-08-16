@@ -3,8 +3,6 @@ package com.otsi.retail.ticketservice.controller;
 
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,28 +55,26 @@ public class TicketController {
 
 		return new GateWayResponse<>(AppConstants.UPLOAD_FILE, uploadFile);
 	}
-	
+
 	@PutMapping(CommonRequestMappings.UPDATE_TICKET_STATUS)
 	public GateWayResponse<?> updateTicketStatus(@RequestBody Ticket ticket) {
 		String updateTicketStatus = ticketService.updateTicketStatus(ticket);
 		return new GateWayResponse<>(AppConstants.UPDATE_TICKET_STATUS, updateTicketStatus);
 
 	}
-	
+
 	@PostMapping(CommonRequestMappings.TICKETS_SEARCHING)
 	public GateWayResponse<?> searchTickets(@RequestBody Ticket ticket) {
-		List<Ticket> tickets = ticketService.ticketsSearching(ticket);
+		List<Ticket> tickets = ticketService.ticketSearching(ticket);
 		return new GateWayResponse<>(AppConstants.GET_TICKETS, tickets);
 
 	}
-	
+
 	@GetMapping(CommonRequestMappings.TICKETS_COUNT)
 	public GateWayResponse<?> getTicketsCount() {
 		List<ReportsVo> ticketsCount = ticketService.getTicketsCount();
 		return new GateWayResponse<>(AppConstants.GET_TICKETS, ticketsCount);
 
 	}
-	
-	
 
 }

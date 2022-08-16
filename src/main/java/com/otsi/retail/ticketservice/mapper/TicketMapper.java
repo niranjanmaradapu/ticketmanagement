@@ -3,12 +3,15 @@
  */
 package com.otsi.retail.ticketservice.mapper;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
+import com.otsi.retail.ticketservice.bindings.CommentVo;
+import com.otsi.retail.ticketservice.bindings.FeedBackVo;
 import com.otsi.retail.ticketservice.bindings.Ticket;
+import com.otsi.retail.ticketservice.entities.FeedBackEntity;
 import com.otsi.retail.ticketservice.entities.TicketEntity;
 
 /**
@@ -40,30 +43,50 @@ public class TicketMapper {
 
 	}
 
-	public Ticket convertEntityToVo(TicketEntity ticketEntity) {
+	public List<Ticket> convertEntityToVo(List<TicketEntity> tickets) {
 
-		Ticket ticket = new Ticket();
-		ticket.setId(ticketEntity.getId());
-		ticket.setTicketId(ticketEntity.getTicketId());
-		ticket.setIssueType(ticketEntity.getIssueType());
-		ticket.setModuleType(ticketEntity.getModuleType());
-		ticket.setContactNumber(ticketEntity.getContactNumber());
-		ticket.setEmailId(ticketEntity.getEmailId());
-		ticket.setPriority(ticketEntity.getPriority());
-		ticket.setClosedBy(ticketEntity.getClosedBy());
-		ticket.setStatus(ticketEntity.getStatus());
-		ticket.setTitle(ticketEntity.getTitle());
-		ticket.setDescription(ticketEntity.getDescription());
-		ticket.setAssignee(ticketEntity.getAssignee());
-		ticket.setClientId(ticketEntity.getClientId());
-		ticket.setStoreId(ticketEntity.getStoreId());
+		List<Ticket> ticketList = new ArrayList<>();
+		tickets.stream().forEach(t -> {
 
-		return ticket;
+			Ticket ticket = new Ticket();
+			ticket.setId(t.getId());
+			ticket.setTicketId(t.getTicketId());
+			ticket.setIssueType(t.getIssueType());
+			ticket.setModuleType(t.getModuleType());
+			ticket.setContactNumber(t.getContactNumber());
+			ticket.setEmailId(t.getEmailId());
+			ticket.setPriority(t.getPriority());
+			ticket.setClosedBy(t.getClosedBy());
+			ticket.setStatus(t.getStatus());
+			ticket.setTitle(t.getTitle());
+			ticket.setDescription(t.getDescription());
+			ticket.setAssignee(t.getAssignee());
+			ticket.setClientId(t.getClientId());
+			ticket.setStoreId(t.getStoreId());
 
-	}
+			// getting comments
+			List<CommentVo> commentList = new ArrayList<>();
+			t.getComments().stream().forEach(c -> {
+				CommentVo commentVo = new CommentVo();
+				commentVo.setId(c.getId());
+				commentVo.setComment(c.getComment());
+				commentList.add(commentVo);
+			});
+			ticket.setCommentsVo(commentList);
 
-	public List<Ticket> convertTicketEntityToVo(List<TicketEntity> tickets) {
-		return tickets.stream().map(dto -> convertEntityToVo(dto)).collect(Collectors.toList());
+			// getting feedback
+			FeedBackEntity feedBackEntity = t.getFeedBackEntity();
+			FeedBackVo feedBackVo = new FeedBackVo();
+			feedBackVo.setId(feedBackEntity.getId());
+			feedBackVo.setIssueResolutionTime(feedBackEntity.getIssueResolutionTime());
+			feedBackVo.setOverallRating(feedBackEntity.getOverallRating());
+			feedBackVo.setResponseTime(feedBackEntity.getResponseTime());
+			feedBackVo.setWorkQuality(feedBackEntity.getWorkQuality());
+			ticket.setFeedBackVo(feedBackVo);
+
+			ticketList.add(ticket);
+		});
+		return ticketList;
 
 	}
 
