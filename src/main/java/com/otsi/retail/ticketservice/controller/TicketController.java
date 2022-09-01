@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,7 +41,7 @@ public class TicketController {
 	}
 
 	@GetMapping(CommonRequestMappings.GET_TICKETS_BY_STATUS)
-	public GateWayResponse<?> getTickets(@RequestParam("status") TicketStatus status, @RequestParam Long clientId) {
+	public GateWayResponse<?> getTickets(@RequestParam("status") TicketStatus status, @RequestHeader Long clientId) {
 
 		List<Ticket> tickets = ticketService.getTicketsByStatus(status, clientId);
 
