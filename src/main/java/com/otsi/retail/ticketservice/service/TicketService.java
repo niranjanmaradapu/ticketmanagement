@@ -21,7 +21,7 @@ public interface TicketService {
 
 	boolean saveTicket(Ticket ticket);
 
-	List<Ticket> getTicketsByStatus(TicketStatus status);
+	List<Ticket> getTicketsByStatus(TicketStatus status, Long clientId);
 
 	boolean uploadFile(MultipartFile file);
 	

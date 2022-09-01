@@ -40,9 +40,9 @@ public class TicketController {
 	}
 
 	@GetMapping(CommonRequestMappings.GET_TICKETS_BY_STATUS)
-	public GateWayResponse<?> getTickets(@RequestParam("status") TicketStatus status) {
+	public GateWayResponse<?> getTickets(@RequestParam("status") TicketStatus status, @RequestParam Long clientId) {
 
-		List<Ticket> tickets = ticketService.getTicketsByStatus(status);
+		List<Ticket> tickets = ticketService.getTicketsByStatus(status, clientId);
 
 		return new GateWayResponse<>(AppConstants.GET_TICKETS, tickets);
 

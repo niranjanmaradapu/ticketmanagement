@@ -182,15 +182,15 @@ public class TicketServiceImpl implements TicketService {
 	 *
 	 */
 	@Override
-	public List<Ticket> getTicketsByStatus(TicketStatus status) {
+	public List<Ticket> getTicketsByStatus(TicketStatus status, Long clientId) {
 
 		List<TicketEntity> ticketEntity = new ArrayList<>();
 
 		if (status.equals(TicketStatus.ALL)) {
-			ticketEntity = ticketRepository.findAll();
+			ticketEntity = ticketRepository.findAllByClientId(clientId);
 		} else {
 
-			ticketEntity = ticketRepository.findAllByStatus(status);
+			ticketEntity = ticketRepository.findAllByStatusAndClientId(status, clientId);
 			if (CollectionUtils.isEmpty(ticketEntity)) {
 				throw new RecordNotFoundException("Records not found");
 			}
@@ -291,7 +291,8 @@ public class TicketServiceImpl implements TicketService {
 	public List<Ticket> ticketSearching(Ticket ticket) {
 		List<TicketEntity> ticketsList = new ArrayList<>();
 		if (ticket.getTicketId() != null && ticket.getStatus() != null) {
-			ticketsList = ticketRepository.findByStatusAndTicketId(ticket.getStatus(), ticket.getTicketId());
+			ticketsList = ticketRepository.findByStatusAndTicketIdAndClientId(ticket.getStatus(), ticket.getTicketId(),
+					ticket.getClientId());
 		}
 		if (CollectionUtils.isEmpty(ticketsList)) {
 			throw new RecordNotFoundException("Records not found");

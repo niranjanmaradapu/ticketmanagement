@@ -10,12 +10,14 @@ import com.otsi.retail.ticketservice.entities.TicketEntity;
 
 public interface TicketRepository extends JpaRepository<TicketEntity, Serializable> {
 
-	List<TicketEntity> findAllByStatus(TicketStatus status);
-
 	List<TicketEntity> findByStatus(TicketStatus open);
 
-	List<TicketEntity> findByStatusAndTicketId(TicketStatus status, String ticketId);
-
 	TicketEntity findByTicketId(String ticketId);
+
+	List<TicketEntity> findAllByClientId(Long clientId);
+
+	List<TicketEntity> findAllByStatusAndClientId(TicketStatus status, Long clientId);
+
+	List<TicketEntity> findByStatusAndTicketIdAndClientId(TicketStatus status, String ticketId, Long clientId);
 
 }
