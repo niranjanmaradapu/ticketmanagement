@@ -41,7 +41,7 @@ public class TicketController {
 	}
 
 	@GetMapping(CommonRequestMappings.GET_TICKETS_BY_STATUS)
-	public GateWayResponse<?> getTickets(@RequestParam("status") TicketStatus status, @RequestHeader Long clientId) {
+	public GateWayResponse<?> getTickets(@RequestParam("status") TicketStatus status, @RequestHeader(value = "clientId") Long clientId) {
 
 		List<Ticket> tickets = ticketService.getTicketsByStatus(status, clientId);
 
@@ -65,8 +65,8 @@ public class TicketController {
 	}
 
 	@PostMapping(CommonRequestMappings.TICKETS_SEARCHING)
-	public GateWayResponse<?> searchTickets(@RequestBody Ticket ticket) {
-		List<Ticket> tickets = ticketService.ticketSearching(ticket);
+	public GateWayResponse<?> searchTickets(@RequestBody Ticket ticket, @RequestHeader(value = "clientId") Long clientId) {
+		List<Ticket> tickets = ticketService.ticketSearching(ticket,clientId);
 		return new GateWayResponse<>(AppConstants.GET_TICKETS, tickets);
 
 	}

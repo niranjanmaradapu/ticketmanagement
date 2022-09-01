@@ -29,6 +29,6 @@ public interface TicketService {
 	
 	List<ReportsVo> getTicketsCount();
 	
-	List<Ticket> ticketSearching(Ticket ticket);
+	List<Ticket> ticketSearching(Ticket ticket, Long clientId);
 	
 }

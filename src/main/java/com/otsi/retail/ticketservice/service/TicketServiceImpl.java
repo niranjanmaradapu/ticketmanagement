@@ -288,11 +288,10 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public List<Ticket> ticketSearching(Ticket ticket) {
+	public List<Ticket> ticketSearching(Ticket ticket,Long clientId) {
 		List<TicketEntity> ticketsList = new ArrayList<>();
 		if (ticket.getTicketId() != null && ticket.getStatus() != null) {
-			ticketsList = ticketRepository.findByStatusAndTicketIdAndClientId(ticket.getStatus(), ticket.getTicketId(),
-					ticket.getClientId());
+			ticketsList = ticketRepository.findByStatusAndTicketIdAndClientId(ticket.getStatus(), ticket.getTicketId(),clientId);
 		}
 		if (CollectionUtils.isEmpty(ticketsList)) {
 			throw new RecordNotFoundException("Records not found");
