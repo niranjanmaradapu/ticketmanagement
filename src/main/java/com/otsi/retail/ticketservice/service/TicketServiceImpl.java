@@ -4,6 +4,8 @@
 package com.otsi.retail.ticketservice.service;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,16 +15,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.otsi.retail.ticketservice.bindings.ClientDetailsVO;
 import com.otsi.retail.ticketservice.bindings.ReportsVo;
 import com.otsi.retail.ticketservice.bindings.Ticket;
 import com.otsi.retail.ticketservice.common.TicketStatus;
+import com.otsi.retail.ticketservice.config.Config;
 import com.otsi.retail.ticketservice.constants.AppConstants;
 import com.otsi.retail.ticketservice.entities.CommentEntity;
 import com.otsi.retail.ticketservice.entities.FeedBackEntity;
@@ -30,6 +46,7 @@ import com.otsi.retail.ticketservice.entities.TicketEntity;
 import com.otsi.retail.ticketservice.exceptions.InvalidDataException;
 import com.otsi.retail.ticketservice.exceptions.RecordNotFoundException;
 import com.otsi.retail.ticketservice.exceptions.RegAppException;
+import com.otsi.retail.ticketservice.gatewayresponse.GateWayResponse;
 import com.otsi.retail.ticketservice.mapper.TicketMapper;
 import com.otsi.retail.ticketservice.props.AppProperties;
 import com.otsi.retail.ticketservice.repository.CommentRepository;
@@ -65,6 +82,12 @@ public class TicketServiceImpl implements TicketService {
 
 	@Autowired
 	private CommentRepository commentRepository;
+
+	@Autowired
+	private Config config;
+
+	@Autowired
+	private RestTemplate restTemplate;
 
 	/**
 	 * @SavTicket ticket creation API
@@ -178,19 +201,41 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	/**
+	 * @throws URISyntaxException
 	 * @getTicketsByStatusAPI get the tickets by status api
 	 *
 	 */
 	@Override
-	public List<Ticket> getTicketsByStatus(TicketStatus status, Long clientId) {
+	public List<Ticket> getTicketsByStatus(TicketStatus status, Long userId) throws URISyntaxException {
 
 		List<TicketEntity> ticketEntity = new ArrayList<>();
 
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<?> entity = new HttpEntity<Object>(headers);
+
+		URI uri = null;
+
+		uri = UriComponentsBuilder.fromUri(new URI(config.getGetClientsByUserIdFromUrm() + "?userId=" + userId)).build()
+				.encode().toUri();
+		ResponseEntity<?> clientsResponse = restTemplate.exchange(uri, HttpMethod.GET, entity, GateWayResponse.class);
+
+		ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule())
+				.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+
+		GateWayResponse<?> gatewayResponse = mapper.convertValue(clientsResponse.getBody(), GateWayResponse.class);
+
+		List<ClientDetailsVO> listOfClients = mapper.convertValue(gatewayResponse.getResult(),
+				new TypeReference<List<ClientDetailsVO>>() {
+				});
+
+		List<Long> clientIds = listOfClients.stream().map(c -> c.getId()).collect(Collectors.toList());
+
 		if (status.equals(TicketStatus.ALL)) {
-			ticketEntity = ticketRepository.findAllByClientId(clientId);
+			ticketEntity = ticketRepository.findByClientIdIn(clientIds);
 		} else {
 
-			ticketEntity = ticketRepository.findAllByStatusAndClientId(status, clientId);
+			ticketEntity = ticketRepository.findByStatusAndClientIdIn(status, clientIds);
 			if (CollectionUtils.isEmpty(ticketEntity)) {
 				throw new RecordNotFoundException("Records not found");
 			}
@@ -288,10 +333,11 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public List<Ticket> ticketSearching(Ticket ticket,Long clientId) {
+	public List<Ticket> ticketSearching(Ticket ticket, Long clientId) {
 		List<TicketEntity> ticketsList = new ArrayList<>();
 		if (ticket.getTicketId() != null && ticket.getStatus() != null) {
-			ticketsList = ticketRepository.findByStatusAndTicketIdAndClientId(ticket.getStatus(), ticket.getTicketId(),clientId);
+			ticketsList = ticketRepository.findByStatusAndTicketIdAndClientId(ticket.getStatus(), ticket.getTicketId(),
+					clientId);
 		}
 		if (CollectionUtils.isEmpty(ticketsList)) {
 			throw new RecordNotFoundException("Records not found");

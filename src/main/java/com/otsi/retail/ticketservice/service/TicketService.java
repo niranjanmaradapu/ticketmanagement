@@ -3,6 +3,7 @@
  */
 package com.otsi.retail.ticketservice.service;
 
+import java.net.URISyntaxException;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -21,7 +22,7 @@ public interface TicketService {
 
 	boolean saveTicket(Ticket ticket);
 
-	List<Ticket> getTicketsByStatus(TicketStatus status, Long clientId);
+	List<Ticket> getTicketsByStatus(TicketStatus status, Long userId) throws URISyntaxException;
 
 	boolean uploadFile(MultipartFile file);
 	

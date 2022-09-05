@@ -1,6 +1,7 @@
 
 package com.otsi.retail.ticketservice.controller;
 
+import java.net.URISyntaxException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,9 +42,9 @@ public class TicketController {
 	}
 
 	@GetMapping(CommonRequestMappings.GET_TICKETS_BY_STATUS)
-	public GateWayResponse<?> getTickets(@RequestParam("status") TicketStatus status, @RequestHeader(value = "clientId") Long clientId) {
+	public GateWayResponse<?> getTickets(@RequestParam("status") TicketStatus status, @RequestHeader(value = "userId") Long userId) throws URISyntaxException {
 
-		List<Ticket> tickets = ticketService.getTicketsByStatus(status, clientId);
+		List<Ticket> tickets = ticketService.getTicketsByStatus(status, userId);
 
 		return new GateWayResponse<>(AppConstants.GET_TICKETS, tickets);
 

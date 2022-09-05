@@ -20,4 +20,8 @@ public interface TicketRepository extends JpaRepository<TicketEntity, Serializab
 
 	List<TicketEntity> findByStatusAndTicketIdAndClientId(TicketStatus status, String ticketId, Long clientId);
 
+	List<TicketEntity> findByClientIdIn(List<Long> clientIds);
+
+	List<TicketEntity> findByStatusAndClientIdIn(TicketStatus status, List<Long> clientIds);
+
 }
