@@ -210,6 +210,26 @@ public class TicketServiceImpl implements TicketService {
 
 		List<TicketEntity> ticketEntity = new ArrayList<>();
 
+		List<ClientDetailsVO> listOfClients = getClientsByUserIdFromUrm(userId);
+
+		List<Long> clientIds = listOfClients.stream().map(c -> c.getId()).collect(Collectors.toList());
+
+		if (status.equals(TicketStatus.ALL)) {
+			ticketEntity = ticketRepository.findByClientIdIn(clientIds);
+		} else {
+
+			ticketEntity = ticketRepository.findByStatusAndClientIdIn(status, clientIds);
+			if (CollectionUtils.isEmpty(ticketEntity)) {
+				throw new RecordNotFoundException("Records not found");
+			}
+		}
+		List<Ticket> ticketsList = ticketMapper.convertEntityToVo(ticketEntity);
+		return ticketsList;
+
+	}
+
+	private List<ClientDetailsVO> getClientsByUserIdFromUrm(Long userId) throws URISyntaxException {
+
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<?> entity = new HttpEntity<Object>(headers);
@@ -229,20 +249,7 @@ public class TicketServiceImpl implements TicketService {
 				new TypeReference<List<ClientDetailsVO>>() {
 				});
 
-		List<Long> clientIds = listOfClients.stream().map(c -> c.getId()).collect(Collectors.toList());
-
-		if (status.equals(TicketStatus.ALL)) {
-			ticketEntity = ticketRepository.findByClientIdIn(clientIds);
-		} else {
-
-			ticketEntity = ticketRepository.findByStatusAndClientIdIn(status, clientIds);
-			if (CollectionUtils.isEmpty(ticketEntity)) {
-				throw new RecordNotFoundException("Records not found");
-			}
-		}
-		List<Ticket> ticketsList = ticketMapper.convertEntityToVo(ticketEntity);
-		return ticketsList;
-
+		return listOfClients;
 	}
 
 	/**
@@ -333,11 +340,15 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public List<Ticket> ticketSearching(Ticket ticket, Long clientId) {
+	public List<Ticket> ticketSearching(Ticket ticket, Long userId) throws URISyntaxException {
 		List<TicketEntity> ticketsList = new ArrayList<>();
+		
+		List<ClientDetailsVO> listOfClients = getClientsByUserIdFromUrm(userId);
+		List<Long> clientIds = listOfClients.stream().map(c-> c.getId()).collect(Collectors.toList());
+		
 		if (ticket.getTicketId() != null && ticket.getStatus() != null) {
-			ticketsList = ticketRepository.findByStatusAndTicketIdAndClientId(ticket.getStatus(), ticket.getTicketId(),
-					clientId);
+			ticketsList = ticketRepository.findByStatusAndTicketIdAndClientIdIn(ticket.getStatus(), ticket.getTicketId(),
+					clientIds);
 		}
 		if (CollectionUtils.isEmpty(ticketsList)) {
 			throw new RecordNotFoundException("Records not found");

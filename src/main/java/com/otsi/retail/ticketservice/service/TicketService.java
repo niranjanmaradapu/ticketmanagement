@@ -30,6 +30,6 @@ public interface TicketService {
 	
 	List<ReportsVo> getTicketsCount();
 	
-	List<Ticket> ticketSearching(Ticket ticket, Long clientId);
+	List<Ticket> ticketSearching(Ticket ticket, Long userId) throws URISyntaxException;
 	
 }

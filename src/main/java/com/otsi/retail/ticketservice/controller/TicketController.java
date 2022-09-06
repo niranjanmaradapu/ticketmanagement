@@ -66,8 +66,8 @@ public class TicketController {
 	}
 
 	@PostMapping(CommonRequestMappings.TICKETS_SEARCHING)
-	public GateWayResponse<?> searchTickets(@RequestBody Ticket ticket, @RequestHeader(value = "clientId") Long clientId) {
-		List<Ticket> tickets = ticketService.ticketSearching(ticket,clientId);
+	public GateWayResponse<?> searchTickets(@RequestBody Ticket ticket, @RequestHeader(value = "userId") Long userId) throws URISyntaxException {
+		List<Ticket> tickets = ticketService.ticketSearching(ticket,userId);
 		return new GateWayResponse<>(AppConstants.GET_TICKETS, tickets);
 
 	}
