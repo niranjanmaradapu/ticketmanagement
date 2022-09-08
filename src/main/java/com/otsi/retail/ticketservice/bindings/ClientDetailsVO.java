@@ -2,6 +2,7 @@ package com.otsi.retail.ticketservice.bindings;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.otsi.retail.ticketservice.common.PlanDetails;
 
 import lombok.AllArgsConstructor;
@@ -52,7 +53,8 @@ public class ClientDetailsVO {
 	
 	private Long amount;
 	
-	private PlanDetails plandetials;
+	@JsonIgnore
+	private PlanDetails plandetails;
 	
 	
 	

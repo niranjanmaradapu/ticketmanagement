@@ -35,8 +35,8 @@ public class TicketController {
 	private TicketService ticketService;
 
 	@PostMapping(CommonRequestMappings.SAVE_TICKET)
-	public GateWayResponse<?> saveNewTicket(@RequestBody Ticket ticket) {
-		boolean saveTicket = ticketService.saveTicket(ticket);
+	public GateWayResponse<?> saveNewTicket(@RequestBody Ticket ticket, @RequestHeader(value="clientId") Long clientId) {
+		boolean saveTicket = ticketService.saveTicket(ticket,clientId);
 		return new GateWayResponse<>(AppConstants.SAVE_TICKET, saveTicket);
 
 	}

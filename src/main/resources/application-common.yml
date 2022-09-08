@@ -39,7 +39,7 @@ spring:
 #Mail Properties   
  mail:
     host: smtp.gmail.com
-    password: raywuntvtunfcthq
+    password: bvpshtrfpkwtkvzv
     port: 587
     properties:
       mail:
@@ -50,7 +50,7 @@ spring:
             enable: true
           timeout: 5000
           writetimeout: 5000
-    username: abc@gmail.com
+    username: sudheerswamy5@gmail.com
     
 #Logging Properties
 logging:
@@ -64,4 +64,4 @@ ticket-app:
   messages:
     ticketMailBodyTemplateFile: TICKET-EMAIL-BODY-TEMPLATE.txt
     ticketMailSubject: New Ticket has been created
-    filesUploadDirectory: D:\\UploadedFiles
+    filesUploadDirectory: C:\\Users\\retails\\Pictures\\TicketImages

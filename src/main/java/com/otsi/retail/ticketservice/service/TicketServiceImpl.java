@@ -93,14 +93,14 @@ public class TicketServiceImpl implements TicketService {
 	 * @SavTicket ticket creation API
 	 */
 	@Override
-	public boolean saveTicket(Ticket ticket) {
+	public boolean saveTicket(Ticket ticket, Long clientId) {
 
 		if (ticket.getTicketId() == null) {
 			ticket.setTicketId("TK" + LocalDate.now().getYear() + LocalDate.now().getDayOfMonth() + LocalDate.now()
 					+ getSaltString());
 			ticket.setStatus(TicketStatus.OPEN);
 
-			TicketEntity ticketEnt = ticketMapper.convertVoToEntity(ticket);
+			TicketEntity ticketEnt = ticketMapper.convertVoToEntity(ticket,clientId);
 
 			TicketEntity save = ticketRepository.save(ticketEnt);
 

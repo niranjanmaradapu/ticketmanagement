@@ -20,7 +20,7 @@ import com.otsi.retail.ticketservice.common.TicketStatus;
 @Component
 public interface TicketService {
 
-	boolean saveTicket(Ticket ticket);
+	boolean saveTicket(Ticket ticket, Long clientId);
 
 	List<Ticket> getTicketsByStatus(TicketStatus status, Long userId) throws URISyntaxException;
 

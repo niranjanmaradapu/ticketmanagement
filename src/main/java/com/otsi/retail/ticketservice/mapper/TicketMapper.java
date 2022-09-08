@@ -21,7 +21,7 @@ import com.otsi.retail.ticketservice.entities.TicketEntity;
 @Component
 public class TicketMapper {
 
-	public TicketEntity convertVoToEntity(Ticket ticket) {
+	public TicketEntity convertVoToEntity(Ticket ticket, Long clientId) {
 
 		TicketEntity ticketEntity = new TicketEntity();
 		ticketEntity.setId(ticket.getId());
@@ -36,7 +36,7 @@ public class TicketMapper {
 		ticketEntity.setTitle(ticket.getTitle());
 		ticketEntity.setDescription(ticket.getDescription());
 		ticketEntity.setAssignee(ticket.getAssignee());
-		ticketEntity.setClientId(ticket.getClientId());
+		ticketEntity.setClientId(clientId);
 		ticketEntity.setStoreId(ticket.getStoreId());
 
 		return ticketEntity;
