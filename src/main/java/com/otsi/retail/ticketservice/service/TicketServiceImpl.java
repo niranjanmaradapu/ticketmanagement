@@ -18,6 +18,8 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -55,6 +57,8 @@ import com.otsi.retail.ticketservice.repository.TicketRepository;
 import com.otsi.retail.ticketservice.utils.EmailUtils;
 import com.otsi.retail.ticketservice.utils.FileUploadUtils;
 
+import lombok.extern.java.Log;
+
 /**
  * @author Sudheer.Swamy
  *
@@ -88,6 +92,9 @@ public class TicketServiceImpl implements TicketService {
 
 	@Autowired
 	private RestTemplate restTemplate;
+	
+	@Autowired
+	private Logger log = LogManager.getLogger(TicketServiceImpl.class);
 
 	/**
 	 * @SavTicket ticket creation API
@@ -105,13 +112,17 @@ public class TicketServiceImpl implements TicketService {
 			TicketEntity save = ticketRepository.save(ticketEnt);
 
 			if (null != save.getTicketId()) {
+				
 				return sendEmail(ticket);
 			}
 		} else if (ticket.getTicketId() != null && ticket.getFeedBackVo() != null) {
 
 			TicketEntity ticketEntity = ticketRepository.findByTicketId(ticket.getTicketId());
-			if (ticketEntity == null)
+			if (ticketEntity == null) {
+				log.error("Record Not Found");
 				throw new RecordNotFoundException("Record not found");
+			}
+				
 			FeedBackEntity feedBackEntity = new FeedBackEntity();
 			feedBackEntity.setId(ticket.getFeedBackVo().getId());
 			feedBackEntity.setWorkQuality(ticket.getFeedBackVo().getWorkQuality());
@@ -125,8 +136,11 @@ public class TicketServiceImpl implements TicketService {
 		} else if (ticket.getTicketId() != null && !(CollectionUtils.isEmpty(ticket.getCommentsVo()))) {
 
 			TicketEntity ticketEntity = ticketRepository.findByTicketId(ticket.getTicketId());
-			if (ticketEntity == null)
+			if (ticketEntity == null) {
+				log.error("Record not found");
 				throw new RecordNotFoundException("Record not found");
+			}
+				
 			List<CommentEntity> commentList = new ArrayList<>();
 			ticket.getCommentsVo().stream().forEach(c -> {
 
@@ -220,6 +234,7 @@ public class TicketServiceImpl implements TicketService {
 
 			ticketEntity = ticketRepository.findByStatusAndClientIdIn(status, clientIds);
 			if (CollectionUtils.isEmpty(ticketEntity)) {
+			log.error("Records not found");
 				throw new RecordNotFoundException("Records not found");
 			}
 		}
@@ -273,18 +288,22 @@ public class TicketServiceImpl implements TicketService {
 		boolean uploadedFile = false;
 		try {
 			if (file.isEmpty()) {
+				log.error("Request must be a file");
 				throw new InvalidDataException("Request must be a file");
 			}
 
 			if (!((file.getContentType().equals("image/jpeg")) || (file.getContentType().equals("image/png")))) {
+				log.error("Only JPEG and PNG content are allowed");
 				throw new InvalidDataException("Only JPEG and PNG content are allowed");
 			}
 
 			uploadedFile = fileUploadUtils.uploadFile(file);
 			if (!uploadedFile) {
+				log.error("File uploading failed");
 				throw new InvalidDataException("File uploading failed");
 			}
 		} catch (Exception e) {
+			log.error("Invalid Request");
 			throw new InvalidDataException("Invalid Request");
 
 		}
@@ -305,6 +324,7 @@ public class TicketServiceImpl implements TicketService {
 			update = ticketRepository.save(ticketEntity);
 
 		} else {
+			log.error("Records not found");
 			throw new RecordNotFoundException("Records not found");
 		}
 
@@ -351,6 +371,7 @@ public class TicketServiceImpl implements TicketService {
 					clientIds);
 		}
 		if (CollectionUtils.isEmpty(ticketsList)) {
+			log.error("Records not found");
 			throw new RecordNotFoundException("Records not found");
 		}
 		List<Ticket> result = ticketMapper.convertEntityToVo(ticketsList);
