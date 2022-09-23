@@ -92,8 +92,7 @@ public class TicketServiceImpl implements TicketService {
 
 	@Autowired
 	private RestTemplate restTemplate;
-	
-	@Autowired
+
 	private Logger log = LogManager.getLogger(TicketServiceImpl.class);
 
 	/**
@@ -107,12 +106,12 @@ public class TicketServiceImpl implements TicketService {
 					+ getSaltString());
 			ticket.setStatus(TicketStatus.OPEN);
 
-			TicketEntity ticketEnt = ticketMapper.convertVoToEntity(ticket,clientId);
+			TicketEntity ticketEnt = ticketMapper.convertVoToEntity(ticket, clientId);
 
 			TicketEntity save = ticketRepository.save(ticketEnt);
 
 			if (null != save.getTicketId()) {
-				
+
 				return sendEmail(ticket);
 			}
 		} else if (ticket.getTicketId() != null && ticket.getFeedBackVo() != null) {
@@ -122,7 +121,7 @@ public class TicketServiceImpl implements TicketService {
 				log.error("Record Not Found");
 				throw new RecordNotFoundException("Record not found");
 			}
-				
+
 			FeedBackEntity feedBackEntity = new FeedBackEntity();
 			feedBackEntity.setId(ticket.getFeedBackVo().getId());
 			feedBackEntity.setWorkQuality(ticket.getFeedBackVo().getWorkQuality());
@@ -140,7 +139,7 @@ public class TicketServiceImpl implements TicketService {
 				log.error("Record not found");
 				throw new RecordNotFoundException("Record not found");
 			}
-				
+
 			List<CommentEntity> commentList = new ArrayList<>();
 			ticket.getCommentsVo().stream().forEach(c -> {
 
@@ -234,7 +233,7 @@ public class TicketServiceImpl implements TicketService {
 
 			ticketEntity = ticketRepository.findByStatusAndClientIdIn(status, clientIds);
 			if (CollectionUtils.isEmpty(ticketEntity)) {
-			log.error("Records not found");
+				log.error("Records not found");
 				throw new RecordNotFoundException("Records not found");
 			}
 		}
@@ -362,13 +361,13 @@ public class TicketServiceImpl implements TicketService {
 	@Override
 	public List<Ticket> ticketSearching(Ticket ticket, Long userId) throws URISyntaxException {
 		List<TicketEntity> ticketsList = new ArrayList<>();
-		
+
 		List<ClientDetailsVO> listOfClients = getClientsByUserIdFromUrm(userId);
-		List<Long> clientIds = listOfClients.stream().map(c-> c.getId()).collect(Collectors.toList());
-		
+		List<Long> clientIds = listOfClients.stream().map(c -> c.getId()).collect(Collectors.toList());
+
 		if (ticket.getTicketId() != null && ticket.getStatus() != null) {
-			ticketsList = ticketRepository.findByStatusAndTicketIdAndClientIdIn(ticket.getStatus(), ticket.getTicketId(),
-					clientIds);
+			ticketsList = ticketRepository.findByStatusAndTicketIdAndClientIdIn(ticket.getStatus(),
+					ticket.getTicketId(), clientIds);
 		}
 		if (CollectionUtils.isEmpty(ticketsList)) {
 			log.error("Records not found");
