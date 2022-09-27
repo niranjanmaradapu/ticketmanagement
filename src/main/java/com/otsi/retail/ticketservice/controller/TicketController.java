@@ -1,11 +1,18 @@
 
 package com.otsi.retail.ticketservice.controller;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import javax.websocket.server.PathParam;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -56,6 +63,17 @@ public class TicketController {
 		boolean uploadFile = ticketService.uploadFile(file);
 
 		return new GateWayResponse<>(AppConstants.UPLOAD_FILE, uploadFile);
+	}
+	
+	@GetMapping("/getFile/{fileName}")
+	public ResponseEntity<?> getTickets(@PathVariable String fileName) throws URISyntaxException, IOException {
+
+		 byte[] downloadImageFromFileSystem = ticketService.downloadImageFromFileSystem(fileName);
+
+		return ResponseEntity.status(HttpStatus.OK)
+				.contentType(MediaType.valueOf("image/png"))
+				.body(downloadImageFromFileSystem);
+
 	}
 
 	@PutMapping(CommonRequestMappings.UPDATE_TICKET_STATUS)

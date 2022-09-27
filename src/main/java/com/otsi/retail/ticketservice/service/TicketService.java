@@ -3,6 +3,7 @@
  */
 package com.otsi.retail.ticketservice.service;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
@@ -31,5 +32,7 @@ public interface TicketService {
 	List<ReportsVo> getTicketsCount();
 	
 	List<Ticket> ticketSearching(Ticket ticket, Long userId) throws URISyntaxException;
+	
+	public byte[] downloadImageFromFileSystem(String fileName) throws IOException;
 	
 }

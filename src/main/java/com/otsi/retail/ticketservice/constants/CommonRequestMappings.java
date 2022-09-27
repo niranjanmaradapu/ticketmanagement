@@ -26,4 +26,5 @@ public class CommonRequestMappings {
 	
 	/************************ Files ************************/
 	public static final String UPLOAD_FILE = "uploadFile";
+	
 }

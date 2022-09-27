@@ -39,6 +39,7 @@ public class Ticket {
 	private String closedBy;
 	private Long clientId;
 	private Long storeId;
+
 	private FeedBackVo feedBackVo;
 	private List<CommentVo> commentsVo;
 

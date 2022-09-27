@@ -23,6 +23,7 @@ import com.otsi.retail.ticketservice.common.Priority;
 import com.otsi.retail.ticketservice.common.TicketStatus;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -37,6 +38,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Builder
 public class TicketEntity extends BaseEntity {
 
 	@Id
@@ -62,8 +64,8 @@ public class TicketEntity extends BaseEntity {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "feedBack_id")
 	private FeedBackEntity feedBackEntity;
-	
-	@OneToMany(mappedBy = "ticketEntity",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+
+	@OneToMany(mappedBy = "ticketEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<CommentEntity> comments;
 
 }

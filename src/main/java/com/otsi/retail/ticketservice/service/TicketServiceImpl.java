@@ -3,6 +3,7 @@
  */
 package com.otsi.retail.ticketservice.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -44,6 +45,7 @@ import com.otsi.retail.ticketservice.config.Config;
 import com.otsi.retail.ticketservice.constants.AppConstants;
 import com.otsi.retail.ticketservice.entities.CommentEntity;
 import com.otsi.retail.ticketservice.entities.FeedBackEntity;
+import com.otsi.retail.ticketservice.entities.FileEntity;
 import com.otsi.retail.ticketservice.entities.TicketEntity;
 import com.otsi.retail.ticketservice.exceptions.InvalidDataException;
 import com.otsi.retail.ticketservice.exceptions.RecordNotFoundException;
@@ -53,11 +55,10 @@ import com.otsi.retail.ticketservice.mapper.TicketMapper;
 import com.otsi.retail.ticketservice.props.AppProperties;
 import com.otsi.retail.ticketservice.repository.CommentRepository;
 import com.otsi.retail.ticketservice.repository.FeedBackRepository;
+import com.otsi.retail.ticketservice.repository.FileRepository;
 import com.otsi.retail.ticketservice.repository.TicketRepository;
 import com.otsi.retail.ticketservice.utils.EmailUtils;
 import com.otsi.retail.ticketservice.utils.FileUploadUtils;
-
-import lombok.extern.java.Log;
 
 /**
  * @author Sudheer.Swamy
@@ -93,6 +94,9 @@ public class TicketServiceImpl implements TicketService {
 	@Autowired
 	private RestTemplate restTemplate;
 
+	@Autowired
+	private FileRepository fileRepo;
+
 	private Logger log = LogManager.getLogger(TicketServiceImpl.class);
 
 	/**
@@ -100,7 +104,6 @@ public class TicketServiceImpl implements TicketService {
 	 */
 	@Override
 	public boolean saveTicket(Ticket ticket, Long clientId) {
-
 		if (ticket.getTicketId() == null) {
 			ticket.setTicketId("TK" + LocalDate.now().getYear() + LocalDate.now().getDayOfMonth() + LocalDate.now()
 					+ getSaltString());
@@ -285,6 +288,9 @@ public class TicketServiceImpl implements TicketService {
 	@Override
 	public boolean uploadFile(MultipartFile file) {
 		boolean uploadedFile = false;
+
+		Map<String, String> messages = appProps.getMessages();
+		String filePath = messages.get(AppConstants.FILES_UPLOAD_DIRECTORY) + file.getOriginalFilename();
 		try {
 			if (file.isEmpty()) {
 				log.error("Request must be a file");
@@ -297,7 +303,10 @@ public class TicketServiceImpl implements TicketService {
 			}
 
 			uploadedFile = fileUploadUtils.uploadFile(file);
-			if (!uploadedFile) {
+			FileEntity fileData = fileRepo.save(FileEntity.builder().fileName(file.getOriginalFilename())
+					.fileType(file.getContentType()).filePath(filePath).build());
+          
+			if (!uploadedFile && fileData != null) {
 				log.error("File uploading failed");
 				throw new InvalidDataException("File uploading failed");
 			}
@@ -308,6 +317,16 @@ public class TicketServiceImpl implements TicketService {
 		}
 
 		return uploadedFile;
+
+	}
+	
+	public byte[] downloadImageFromFileSystem(String fileName) throws IOException {
+
+		Optional<FileEntity> dbImages = fileRepo.findByFileName(fileName);
+
+		String filePath = dbImages.get().getFilePath();
+		byte[] readAllBytes = Files.readAllBytes(new File(filePath).toPath());
+		return readAllBytes;
 
 	}
 
