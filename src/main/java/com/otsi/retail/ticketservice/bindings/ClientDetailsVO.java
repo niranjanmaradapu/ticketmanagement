@@ -59,5 +59,9 @@ public class ClientDetailsVO {
 	private LocalDateTime planExpiryDate;
 
 	private LocalDateTime planActivatedDate;
+	
+	private Boolean planExpired;
+
+	private LocalDateTime systemTime;
 
 }

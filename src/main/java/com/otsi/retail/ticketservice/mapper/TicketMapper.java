@@ -9,9 +9,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import com.otsi.retail.ticketservice.bindings.CommentVo;
-import com.otsi.retail.ticketservice.bindings.FeedBackVo;
 import com.otsi.retail.ticketservice.bindings.Ticket;
-import com.otsi.retail.ticketservice.entities.FeedBackEntity;
 import com.otsi.retail.ticketservice.entities.TicketEntity;
 
 /**
