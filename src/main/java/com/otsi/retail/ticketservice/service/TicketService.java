@@ -21,7 +21,7 @@ import com.otsi.retail.ticketservice.common.TicketStatus;
 @Component
 public interface TicketService {
 
-	boolean saveTicket(Ticket ticket, Long clientId);
+	String saveTicket(Ticket ticket, Long clientId);
 
 	List<Ticket> getTicketsByStatus(TicketStatus status, Long userId) throws URISyntaxException;
 
@@ -33,6 +33,6 @@ public interface TicketService {
 	
 	List<Ticket> ticketSearching(Ticket ticket, Long userId) throws URISyntaxException;
 	
-	public byte[] downloadImageFromFileSystem(String fileName) throws IOException;
+	public String downloadImageFromFileSystem(String fileName) throws IOException;
 	
 }

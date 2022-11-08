@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -103,7 +104,8 @@ public class TicketServiceImpl implements TicketService {
 	 * @SavTicket ticket creation API
 	 */
 	@Override
-	public boolean saveTicket(Ticket ticket, Long clientId) {
+	public String saveTicket(Ticket ticket, Long clientId) {
+		TicketEntity save = null;
 		if (ticket.getTicketId() == null) {
 			ticket.setTicketId("TK" + LocalDate.now().getYear() + LocalDate.now().getDayOfMonth() + LocalDate.now()
 					+ getSaltString());
@@ -111,11 +113,11 @@ public class TicketServiceImpl implements TicketService {
 
 			TicketEntity ticketEnt = ticketMapper.convertVoToEntity(ticket, clientId);
 
-			TicketEntity save = ticketRepository.save(ticketEnt);
+		    save = ticketRepository.save(ticketEnt);
 
 			if (null != save.getTicketId()) {
 
-				return sendEmail(ticket);
+				return String.valueOf(sendEmail(ticket)) +" with id: "+save.getTicketId();
 			}
 		} else if (ticket.getTicketId() != null && ticket.getFeedBackVo() != null) {
 
@@ -158,7 +160,7 @@ public class TicketServiceImpl implements TicketService {
 			ticketEntity.setComments(commentList);
 		}
 
-		return false;
+		return "Ticket Saved Successfully With Id: "+save.getTicketId();
 
 	}
 
@@ -305,7 +307,7 @@ public class TicketServiceImpl implements TicketService {
 			uploadedFile = fileUploadUtils.uploadFile(file);
 			FileEntity fileData = fileRepo.save(FileEntity.builder().fileName(file.getOriginalFilename())
 					.fileType(file.getContentType()).filePath(filePath).build());
-          
+
 			if (!uploadedFile && fileData != null) {
 				log.error("File uploading failed");
 				throw new InvalidDataException("File uploading failed");
@@ -319,14 +321,17 @@ public class TicketServiceImpl implements TicketService {
 		return uploadedFile;
 
 	}
-	
-	public byte[] downloadImageFromFileSystem(String fileName) throws IOException {
+
+	public String downloadImageFromFileSystem(String fileName) throws IOException {
 
 		Optional<FileEntity> dbImages = fileRepo.findByFileName(fileName);
 
 		String filePath = dbImages.get().getFilePath();
 		byte[] readAllBytes = Files.readAllBytes(new File(filePath).toPath());
-		return readAllBytes;
+
+		String encodeToString = Base64.getEncoder().encodeToString(readAllBytes);
+		System.out.println("Decoded Data: " + encodeToString);
+		return encodeToString;
 
 	}
 

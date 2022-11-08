@@ -42,14 +42,16 @@ public class TicketController {
 	private TicketService ticketService;
 
 	@PostMapping(CommonRequestMappings.SAVE_TICKET)
-	public GateWayResponse<?> saveNewTicket(@RequestBody Ticket ticket, @RequestHeader(value="clientId") Long clientId) {
-		boolean saveTicket = ticketService.saveTicket(ticket,clientId);
+	public GateWayResponse<?> saveNewTicket(@RequestBody Ticket ticket,
+			@RequestHeader(value = "clientId") Long clientId) {
+		String saveTicket = ticketService.saveTicket(ticket, clientId);
 		return new GateWayResponse<>(AppConstants.SAVE_TICKET, saveTicket);
 
 	}
 
 	@GetMapping(CommonRequestMappings.GET_TICKETS_BY_STATUS)
-	public GateWayResponse<?> getTickets(@RequestParam("status") TicketStatus status, @RequestHeader(value = "userId") Long userId) throws URISyntaxException {
+	public GateWayResponse<?> getTickets(@RequestParam("status") TicketStatus status,
+			@RequestHeader(value = "userId") Long userId) throws URISyntaxException {
 
 		List<Ticket> tickets = ticketService.getTicketsByStatus(status, userId);
 
@@ -64,15 +66,13 @@ public class TicketController {
 
 		return new GateWayResponse<>(AppConstants.UPLOAD_FILE, uploadFile);
 	}
-	
+
 	@GetMapping("/getFile/{fileName}")
-	public ResponseEntity<?> getTickets(@PathVariable String fileName) throws URISyntaxException, IOException {
+	public ResponseEntity<String> getTickets(@PathVariable String fileName) throws URISyntaxException, IOException {
 
-		 byte[] downloadImageFromFileSystem = ticketService.downloadImageFromFileSystem(fileName);
+		String files = ticketService.downloadImageFromFileSystem(fileName);
 
-		return ResponseEntity.status(HttpStatus.OK)
-				.contentType(MediaType.valueOf("image/png"))
-				.body(downloadImageFromFileSystem);
+		return ResponseEntity.ok(files);
 
 	}
 
@@ -84,8 +84,9 @@ public class TicketController {
 	}
 
 	@PostMapping(CommonRequestMappings.TICKETS_SEARCHING)
-	public GateWayResponse<?> searchTickets(@RequestBody Ticket ticket, @RequestHeader(value = "userId") Long userId) throws URISyntaxException {
-		List<Ticket> tickets = ticketService.ticketSearching(ticket,userId);
+	public GateWayResponse<?> searchTickets(@RequestBody Ticket ticket, @RequestHeader(value = "userId") Long userId)
+			throws URISyntaxException {
+		List<Ticket> tickets = ticketService.ticketSearching(ticket, userId);
 		return new GateWayResponse<>(AppConstants.GET_TICKETS, tickets);
 
 	}

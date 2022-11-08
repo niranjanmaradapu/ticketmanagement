@@ -28,5 +28,7 @@ public class FileEntity {
 	private String fileType;
 
 	private String filePath;
+	
+	private String ticketId;
 
 }
