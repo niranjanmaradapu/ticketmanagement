@@ -25,7 +25,7 @@ public interface TicketService {
 
 	List<Ticket> getTicketsByStatus(TicketStatus status, Long userId) throws URISyntaxException;
 
-	boolean uploadFile(MultipartFile file);
+	boolean uploadFile(MultipartFile file, String ticketId);
 	
 	String updateTicketStatus(Ticket ticket);
 	

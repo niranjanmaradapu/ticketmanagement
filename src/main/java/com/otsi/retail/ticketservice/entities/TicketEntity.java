@@ -18,6 +18,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import com.otsi.retail.ticketservice.common.IssueType;
 import com.otsi.retail.ticketservice.common.Priority;
 import com.otsi.retail.ticketservice.common.TicketStatus;
@@ -67,5 +70,9 @@ public class TicketEntity extends BaseEntity {
 
 	@OneToMany(mappedBy = "ticketEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<CommentEntity> comments;
+	
+	@OneToMany(mappedBy = "tickets", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@Fetch(value = FetchMode.SUBSELECT)
+	private List<FileEntity> files;
 
 }

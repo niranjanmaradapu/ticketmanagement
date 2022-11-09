@@ -9,6 +9,7 @@ import com.otsi.retail.ticketservice.common.IssueType;
 import com.otsi.retail.ticketservice.common.Priority;
 import com.otsi.retail.ticketservice.common.TicketStatus;
 import com.otsi.retail.ticketservice.entities.CommentEntity;
+import com.otsi.retail.ticketservice.entities.FileEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,8 +40,8 @@ public class Ticket {
 	private String closedBy;
 	private Long clientId;
 	private Long storeId;
-
 	private FeedBackVo feedBackVo;
 	private List<CommentVo> commentsVo;
+	private List<FileVo> files;
 
 }

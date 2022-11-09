@@ -60,9 +60,9 @@ public class TicketController {
 	}
 
 	@PostMapping(CommonRequestMappings.UPLOAD_FILE)
-	public GateWayResponse<?> uploadFile(@RequestParam("file") MultipartFile file) {
+	public GateWayResponse<?> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam String ticketId) {
 
-		boolean uploadFile = ticketService.uploadFile(file);
+		boolean uploadFile = ticketService.uploadFile(file,ticketId);
 
 		return new GateWayResponse<>(AppConstants.UPLOAD_FILE, uploadFile);
 	}
