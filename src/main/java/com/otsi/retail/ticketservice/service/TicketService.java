@@ -33,6 +33,6 @@ public interface TicketService {
 	
 	List<Ticket> ticketSearching(Ticket ticket, Long userId) throws URISyntaxException;
 	
-	public String downloadImageFromFileSystem(String fileName) throws IOException;
+	public String downloadImageByTicketId(Long ticketId) throws IOException;
 	
 }

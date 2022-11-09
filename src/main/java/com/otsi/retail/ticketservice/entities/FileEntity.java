@@ -32,7 +32,7 @@ public class FileEntity {
 	private String filePath;
 	
 	@ManyToOne
-	@JoinColumn(name = "tkt_id")
+	@JoinColumn(name = "ticket_id")
 	private TicketEntity tickets;
 
 }

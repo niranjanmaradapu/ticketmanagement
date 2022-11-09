@@ -67,10 +67,10 @@ public class TicketController {
 		return new GateWayResponse<>(AppConstants.UPLOAD_FILE, uploadFile);
 	}
 
-	@GetMapping("/getFile/{fileName}")
-	public ResponseEntity<String> getTickets(@PathVariable String fileName) throws URISyntaxException, IOException {
+	@GetMapping("/getFile/{ticketId}")
+	public ResponseEntity<String> downloadImagesByTicketId(@PathVariable Long ticketId) throws URISyntaxException, IOException {
 
-		String files = ticketService.downloadImageFromFileSystem(fileName);
+		String files = ticketService.downloadImageByTicketId(ticketId);
 
 		return ResponseEntity.ok(files);
 

@@ -338,9 +338,9 @@ public class TicketServiceImpl implements TicketService {
 
 	}
 
-	public String downloadImageFromFileSystem(String fileName) throws IOException {
+	public String downloadImageByTicketId(Long ticketId) throws IOException {
 
-		Optional<FileEntity> dbImages = fileRepo.findByFileName(fileName);
+		Optional<FileEntity> dbImages = fileRepo.findByTicketsId(ticketId);
 
 		String filePath = dbImages.get().getFilePath();
 		byte[] readAllBytes = Files.readAllBytes(new File(filePath).toPath());

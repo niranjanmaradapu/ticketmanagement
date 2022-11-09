@@ -11,4 +11,6 @@ public interface FileRepository extends JpaRepository<FileEntity, Serializable> 
 
 	Optional<FileEntity> findByFileName(String fileName);
 
+	Optional<FileEntity> findByTicketsId(Long ticketId);
+
 }
