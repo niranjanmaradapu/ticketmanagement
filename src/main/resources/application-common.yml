@@ -19,7 +19,7 @@ spring:
     platform: postgres
     url: jdbc:postgresql://localhost:5432/ticket-management
     username: postgres
-    password: Otsi@123
+    password: Otsi@1234
  jpa:
    hibernate:
     ddl-auto: update
@@ -64,4 +64,4 @@ ticket-app:
   messages:
     ticketMailBodyTemplateFile: TICKET-EMAIL-BODY-TEMPLATE.txt
     ticketMailSubject: New Ticket has been created
-    filesUploadDirectory: C:\\Users\\retails\\Pictures\\TicketImages
+    filesUploadDirectory: C:\\TicketImages

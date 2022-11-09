@@ -117,7 +117,7 @@ public class TicketServiceImpl implements TicketService {
 
 			if (null != save.getTicketId()) {
 
-				return String.valueOf(sendEmail(ticket)) + " with id: " + save.getTicketId();
+				//return String.valueOf(sendEmail(ticket)) + " with id: " + save.getTicketId();
 			}
 		} else if (ticket.getTicketId() != null && ticket.getFeedBackVo() != null) {
 
@@ -299,7 +299,8 @@ public class TicketServiceImpl implements TicketService {
 				throw new InvalidDataException("Request must be a file");
 			}
 
-			if (!((file.getContentType().equals("image/jpeg")) || (file.getContentType().equals("image/png")))) {
+			if (!((file.getContentType().equals("image/jpeg")) || (file.getContentType().equals("image/png"))||
+					(file.getContentType().equals("IMAGE/PNG")))) {
 				log.error("Only JPEG and PNG content are allowed");
 				throw new InvalidDataException("Only JPEG and PNG content are allowed");
 			}
