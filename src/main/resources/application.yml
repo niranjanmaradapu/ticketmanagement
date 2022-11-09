@@ -27,7 +27,8 @@ spring:
       file-size-threshold: 1KB
       max-file-size: 5MB
 
-#Mail Properties
+#Otsi Mail Properties
+
   mail:
     host: webmail.otsi-usa.com
     password: Otsi&23456
@@ -36,12 +37,30 @@ spring:
       mail:
         smtp:
           auth: true
-          connectiontimeout: 20000
+          connectiontimeout: 80000
           starttls:
             enable: true
-          timeout: 20000
-          writetimeout: 20000
+          timeout: 80000
+          writetimeout: 80000
     username: easyretailworld@otsi.com
+    
+#Smtp Mail Properties    
+ 
+# mail:
+#    host: smtp.gmail.com
+#    password: rfbpkkhrehvqchaq
+#    port: 587
+#    properties:
+#       mail:
+#        smtp:
+#          auth: true
+#          connectiontimeout: 80000
+#          starttls:
+#            enable: true
+#          timeout: 80000
+#          writetimeout: 80000
+#    username: raoch174@gmail.com  
+
     
 #Service Registry Properties   
 eureka:
