@@ -117,7 +117,7 @@ public class TicketServiceImpl implements TicketService {
 
 			if (null != save.getTicketId()) {
 
-				 return String.valueOf(sendEmail(ticket)) +" with id: "+save.getTicketId();
+				return String.valueOf(sendEmail(ticket)) + " with id: " + save.getTicketId();
 			}
 		} else if (ticket.getTicketId() != null && ticket.getFeedBackVo() != null) {
 
@@ -305,18 +305,23 @@ public class TicketServiceImpl implements TicketService {
 			}
 
 			uploadedFile = fileUploadUtils.uploadFile(file);
-			FileEntity fileData = fileRepo.save(FileEntity.builder().fileName(file.getOriginalFilename())
-					.fileType(file.getContentType()).filePath(filePath).build());
+
 			// take the ticket id and retrieve from the db
-			Long id = 6L;
+			FileEntity fileData = new FileEntity();
 			TicketEntity ticket = ticketRepository.findByTicketId(ticketId);
 
-			if (ticket!=null) {
-				
+			if (ticket != null) {
+
 				fileData.setTickets(ticket);
 
 			} else
 				throw new RecordNotFoundException("Given ticket not found");
+
+			fileData.setFileName(file.getOriginalFilename());
+			fileData.setFilePath(filePath);
+			fileData.setFileType(file.getContentType());
+
+			fileData = fileRepo.save(fileData);
 
 			if (!uploadedFile && fileData != null) {
 				log.error("File uploading failed");
