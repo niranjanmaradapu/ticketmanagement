@@ -98,8 +98,6 @@ public class TicketServiceImpl implements TicketService {
 	@Autowired
 	private FileRepository fileRepo;
 
-	private Logger log = LogManager.getLogger(TicketServiceImpl.class);
-
 	/**
 	 * @SavTicket ticket creation API
 	 */
@@ -117,13 +115,13 @@ public class TicketServiceImpl implements TicketService {
 
 			if (null != save.getTicketId()) {
 
-				//return String.valueOf(sendEmail(ticket)) + " with id: " + save.getTicketId();
+				// return String.valueOf(sendEmail(ticket)) + " with id: " + save.getTicketId();
 			}
 		} else if (ticket.getTicketId() != null && ticket.getFeedBackVo() != null) {
 
 			TicketEntity ticketEntity = ticketRepository.findByTicketId(ticket.getTicketId());
 			if (ticketEntity == null) {
-				log.error("Record Not Found");
+
 				throw new RecordNotFoundException("Record not found");
 			}
 
@@ -141,7 +139,7 @@ public class TicketServiceImpl implements TicketService {
 
 			TicketEntity ticketEntity = ticketRepository.findByTicketId(ticket.getTicketId());
 			if (ticketEntity == null) {
-				log.error("Record not found");
+
 				throw new RecordNotFoundException("Record not found");
 			}
 
@@ -238,7 +236,7 @@ public class TicketServiceImpl implements TicketService {
 
 			ticketEntity = ticketRepository.findByStatusAndClientIdIn(status, clientIds);
 			if (CollectionUtils.isEmpty(ticketEntity)) {
-				log.error("Records not found");
+
 				throw new RecordNotFoundException("Records not found");
 			}
 		}
@@ -295,13 +293,13 @@ public class TicketServiceImpl implements TicketService {
 		String filePath = messages.get(AppConstants.FILES_UPLOAD_DIRECTORY) + file.getOriginalFilename();
 		try {
 			if (file.isEmpty()) {
-				log.error("Request must be a file");
+
 				throw new InvalidDataException("Request must be a file");
 			}
 
-			if (!((file.getContentType().equals("image/jpeg")) || (file.getContentType().equals("image/png"))||
-					(file.getContentType().equals("IMAGE/PNG")))) {
-				log.error("Only JPEG and PNG content are allowed");
+			if (!((file.getContentType().equals("image/jpeg")) || (file.getContentType().equals("image/png"))
+					|| (file.getContentType().equals("IMAGE/PNG")))) {
+
 				throw new InvalidDataException("Only JPEG and PNG content are allowed");
 			}
 
@@ -325,11 +323,11 @@ public class TicketServiceImpl implements TicketService {
 			fileData = fileRepo.save(fileData);
 
 			if (!uploadedFile && fileData != null) {
-				log.error("File uploading failed");
+
 				throw new InvalidDataException("File uploading failed");
 			}
 		} catch (Exception e) {
-			log.error("Invalid Request");
+
 			throw new InvalidDataException("Invalid Request");
 
 		}
@@ -363,7 +361,7 @@ public class TicketServiceImpl implements TicketService {
 			update = ticketRepository.save(ticketEntity);
 
 		} else {
-			log.error("Records not found");
+
 			throw new RecordNotFoundException("Records not found");
 		}
 
@@ -410,7 +408,7 @@ public class TicketServiceImpl implements TicketService {
 					ticket.getTicketId(), clientIds);
 		}
 		if (CollectionUtils.isEmpty(ticketsList)) {
-			log.error("Records not found");
+
 			throw new RecordNotFoundException("Records not found");
 		}
 		List<Ticket> result = ticketMapper.convertEntityToVo(ticketsList);

@@ -5,11 +5,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import javax.websocket.server.PathParam;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,13 +58,14 @@ public class TicketController {
 	@PostMapping(CommonRequestMappings.UPLOAD_FILE)
 	public GateWayResponse<?> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam String ticketId) {
 
-		boolean uploadFile = ticketService.uploadFile(file,ticketId);
+		boolean uploadFile = ticketService.uploadFile(file, ticketId);
 
 		return new GateWayResponse<>(AppConstants.UPLOAD_FILE, uploadFile);
 	}
 
 	@GetMapping("/getFile/{ticketId}")
-	public ResponseEntity<String> downloadImagesByTicketId(@PathVariable Long ticketId) throws URISyntaxException, IOException {
+	public ResponseEntity<String> downloadImagesByTicketId(@PathVariable Long ticketId)
+			throws URISyntaxException, IOException {
 
 		String files = ticketService.downloadImageByTicketId(ticketId);
 
